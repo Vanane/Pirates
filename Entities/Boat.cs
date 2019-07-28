@@ -23,7 +23,9 @@ namespace Pirates.Entities
         /// added to managers will not have this method called.
         /// </summary>
 
-        public bool mAnchored { get { return Anchored; } }
+        public bool mAnchored { get { return Anchored; } }    
+
+        public enum Sides { Left = -1, Right = 1};
 
         private void CustomInitialize()
 		{
@@ -68,13 +70,18 @@ namespace Pirates.Entities
         }
 
 
+        public void SwitchSide()
+        {
+            SideToShootFrom *= -1;
+        }
+
         public void FireCannonball()
         {
             if(TimeBetweenShoot < FlatRedBall.Screens.ScreenManager.CurrentScreen.PauseAdjustedSecondsSince(LastTimeShot))
             {
                 var ball = CannonballFactory.CreateNew(X, Y);
                 ball.RotationZ = this.RotationZ;
-                ball.SetTrajectory(this.X, this.Y, this.RotationMatrix.Left);
+                ball.SetTrajectory(this.X, this.Y, this.RotationMatrix.Left * SideToShootFrom);
                 ball.Damage = 10;
 
                 LastTimeShot = (float)FlatRedBall.Screens.ScreenManager.CurrentScreen.PauseAdjustedCurrentTime;

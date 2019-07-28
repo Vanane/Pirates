@@ -990,6 +990,17 @@
           <Name>LastTimeShot</Name>
           <Type>float</Type>
         </CustomVariable>
+        <CustomVariable>
+          <Properties>
+            <PropertySave>
+              <Name>Type</Name>
+              <ValueAsString>int</ValueAsString>
+            </PropertySave>
+          </Properties>
+          <Name>SideToShootFrom</Name>
+          <Type>int</Type>
+          <DefaultValue xsi:type="xsd:int">-1</DefaultValue>
+        </CustomVariable>
       </CustomVariables>
       <ImplementsIDrawableBatch>false</ImplementsIDrawableBatch>
       <Name>Entities\Boat</Name>

@@ -51,6 +51,7 @@ namespace Pirates.Entities
         public bool IsDead;
         public float TimeBetweenShoot;
         public float LastTimeShot;
+        public int SideToShootFrom = -1;
         private FlatRedBall.Math.Geometry.ShapeCollection mGeneratedCollision;
         public FlatRedBall.Math.Geometry.ShapeCollection Collision
         {
@@ -260,6 +261,7 @@ namespace Pirates.Entities
                 RelativeZ = 15f;
             }
             SpeedScale = 0;
+            SideToShootFrom = -1;
         }
         public virtual void ConvertToManuallyUpdated () 
         {

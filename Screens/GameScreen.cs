@@ -285,6 +285,8 @@ namespace Pirates.Screens
                 PlayerBoat.RotationZVelocity = Math.Max(PlayerBoat.RotationZVelocity - PlayerBoat.RotationAcceleration, -PlayerBoat.MaxRotationSpeed);
             }
 
+            if (InputManager.Keyboard.KeyPushed(Keys.S))
+                PlayerBoat.SwitchSide();
 
             if (InputManager.Keyboard.KeyPushed(Keys.Space))
             {
