@@ -25,6 +25,8 @@ namespace Pirates.Entities
 
 		private void CustomInitialize()
 		{
+            this.Z = Custom.GameSettings.MidAirLevelTerrainDepth;
+
             OriginalPosition = Position;
             SpriteInstance.Z = this.Z;
 		}

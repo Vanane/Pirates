@@ -9,29 +9,25 @@ using FlatRedBall.Instructions;
 using FlatRedBall.AI.Pathfinding;
 using FlatRedBall.Graphics.Animation;
 using FlatRedBall.Graphics.Particle;
+using FlatRedBall.Gui;
 using FlatRedBall.Math.Geometry;
 using FlatRedBall.Localization;
 using FlatRedBall.Screens;
-using GumRuntime;
 using FlatRedBall.Forms.Controls;
+using GumRuntime;
+
+using Pirates.Custom;
 
 
 namespace Pirates.Screens
 {
 	public partial class MainMenuScreen
 	{
-
 		void CustomInitialize()
 		{
-            ButtonPlayClick += ButtonPlay_Click;
-            ButtonSettingsClick += ButtonSettings_Click;
-            ButtonQuitClick += ButtonQuit_Click;
-            ButtonBackClick += ButtonBack_Click;
+            InitializeEvents();
 
-            ButtonSwitchFullscreenClick += (x) =>
-            {
-                FlatRedBallServices.GraphicsOptions.SetFullScreen(1366, 768);
-            };
+            InitializeValues();
 
             SliderVolume.FormsControl.IsSnapToTickEnabled = true;
             SliderVolume.FormsControl.TicksFrequency = 1;
@@ -53,6 +49,26 @@ namespace Pirates.Screens
         {
 
 
+        }
+
+
+        private void InitializeEvents()
+        {
+            ButtonPlayClick += ButtonPlay_Click;
+            ButtonSettingsClick += ButtonSettings_Click;
+            ButtonQuitClick += ButtonQuit_Click;
+            ButtonBackClick += ButtonBack_Click;
+            ButtonApplyClick += ButtonApply_Click;
+
+            ButtonSwitchFullscreenClick += (x) =>
+            {
+                FlatRedBallServices.GraphicsOptions.SetFullScreen(1366, 768);
+            };
+        }
+
+        private void InitializeValues()
+        {
+            SliderVolume.FormsControl.Value = GameSettings.GetSettings.VolumeLevel * 100;
         }
 
         private void ButtonPlay_Click(object o)
@@ -77,6 +93,14 @@ namespace Pirates.Screens
         private void ButtonQuit_Click(object o)
         {
             FlatRedBallServices.Game.Exit();
+        }
+
+        private void ButtonApply_Click(object o)
+        {
+            GameSettings.GetSettings.VolumeLevel = (float)SliderVolume.FormsControl.Value / 100;
+            ButtonBack_Click(o);
+
+            GameSettings.SaveSettings();
         }
     }
 }

@@ -42,6 +42,10 @@ namespace Pirates.Screens
         {
             
         }
+        void OnButtonApplyClick (FlatRedBall.Gui.IWindow window) 
+        {
+            
+        }
 
     }
 }

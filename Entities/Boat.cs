@@ -11,6 +11,7 @@ using FlatRedBall.Math.Geometry;
 
 using Pirates.Factories;
 using Pirates.Entities.Animations;
+using Pirates.Custom;
 
 
 namespace Pirates.Entities
@@ -29,6 +30,8 @@ namespace Pirates.Entities
 
         private void CustomInitialize()
 		{
+            this.Z = Custom.GameSettings.GroundLevelSpritesDepth;
+
             Anchored = false;
             AnchorSpriteInstance.RelativeX = this.BoatSpriteInstance.Width / 2;
             AnchorSpriteInstance.RelativeY = this.BoatSpriteInstance.Height / 2;
@@ -86,7 +89,7 @@ namespace Pirates.Entities
 
                 LastTimeShot = (float)FlatRedBall.Screens.ScreenManager.CurrentScreen.PauseAdjustedCurrentTime;
 
-                FlatRedBall.Audio.AudioManager.Play(fire);
+                FlatRedBall.Audio.AudioManager.Play(fire, GameSettings.GetSettings.VolumeLevel);
             }
         }
 

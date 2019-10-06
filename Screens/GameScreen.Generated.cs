@@ -31,9 +31,16 @@ namespace Pirates.Screens
         private FlatRedBall.TileCollisions.TileShapeCollection HulkCollision;
         private FlatRedBall.TileCollisions.TileShapeCollection RockCollision;
         private FlatRedBall.Math.PositionedObjectList<Pirates.Entities.Cannonball> CannonballList;
-        private Pirates.Entities.UI.Button ButtonAddBoat;
         private Pirates.Entities.UI.SpeedMeter SpeedMeter;
         private FlatRedBall.Math.PositionedObjectList<Pirates.Entities.Animations.Explosion> ExplosionList;
+        private Pirates.GumRuntimes.ButtonRuntime ButtonPistol;
+        private Pirates.GumRuntimes.ButtonRuntime ButtonShotgun;
+        private FlatRedBall.Math.PositionedObjectList<Pirates.Entities.Bullet> BulletList;
+        private FlatRedBall.Math.PositionedObjectList<Pirates.Entities.Skeleton> EnemyList;
+        private Pirates.GumRuntimes.InventoryForms.InventoryBarRuntime InventoryBar;
+        private Pirates.GumRuntimes.InventoryForms.InventoryGuiRuntime InventoryGui;
+        public event FlatRedBall.Gui.WindowEvent ButtonPistolClick;
+        public event FlatRedBall.Gui.WindowEvent ButtonShotgunClick;
         protected global::RenderingLibrary.Graphics.Layer UIBoatLayerGum;
         public GameScreen () 
         	: base ("GameScreen")
@@ -64,12 +71,18 @@ namespace Pirates.Screens
             RockCollision.Name = "RockCollision";
             CannonballList = new FlatRedBall.Math.PositionedObjectList<Pirates.Entities.Cannonball>();
             CannonballList.Name = "CannonballList";
-            ButtonAddBoat = new Pirates.Entities.UI.Button(ContentManagerName, false);
-            ButtonAddBoat.Name = "ButtonAddBoat";
             SpeedMeter = new Pirates.Entities.UI.SpeedMeter(ContentManagerName, false);
             SpeedMeter.Name = "SpeedMeter";
             ExplosionList = new FlatRedBall.Math.PositionedObjectList<Pirates.Entities.Animations.Explosion>();
             ExplosionList.Name = "ExplosionList";
+            ButtonPistol = GameScreenGum.GetGraphicalUiElementByName("ButtonPistol") as Pirates.GumRuntimes.ButtonRuntime;
+            ButtonShotgun = GameScreenGum.GetGraphicalUiElementByName("ButtonShotgun") as Pirates.GumRuntimes.ButtonRuntime;
+            BulletList = new FlatRedBall.Math.PositionedObjectList<Pirates.Entities.Bullet>();
+            BulletList.Name = "BulletList";
+            EnemyList = new FlatRedBall.Math.PositionedObjectList<Pirates.Entities.Skeleton>();
+            EnemyList.Name = "EnemyList";
+            InventoryBar = GameScreenGum.GetGraphicalUiElementByName("InventoryBarInstance") as Pirates.GumRuntimes.InventoryForms.InventoryBarRuntime;
+            InventoryGui = GameScreenGum.GetGraphicalUiElementByName("InventoryGui") as Pirates.GumRuntimes.InventoryForms.InventoryGuiRuntime;
             // normally we wait to set variables until after the object is created, but in this case if the
             // TileShapeCollection doesn't have its Visible set before creating the tiles, it can result in
             // really bad performance issues, as shapes will be made visible, then invisible. Really bad perf!
@@ -94,7 +107,7 @@ namespace Pirates.Screens
             // TileShapeCollection doesn't have its Visible set before creating the tiles, it can result in
             // really bad performance issues, as shapes will be made visible, then invisible. Really bad perf!
             RockCollision.Visible = false;
-            FlatRedBall.TileCollisions.TileShapeCollectionLayeredTileMapExtensions.AddCollisionFromTilesWithType(RockCollision, Terrain, "Hulk");
+            FlatRedBall.TileCollisions.TileShapeCollectionLayeredTileMapExtensions.AddCollisionFromTilesWithType(RockCollision, Terrain, "Rock");
             
             
             PostInitialize();
@@ -115,12 +128,15 @@ namespace Pirates.Screens
             Factories.DockFactory.Initialize(ContentManagerName);
             Factories.CannonballFactory.Initialize(ContentManagerName);
             Factories.ExplosionFactory.Initialize(ContentManagerName);
+            Factories.BulletFactory.Initialize(ContentManagerName);
+            Factories.SkeletonFactory.Initialize(ContentManagerName);
             Factories.DockFactory.AddList(DockList);
             Factories.CannonballFactory.AddList(CannonballList);
             Factories.ExplosionFactory.AddList(ExplosionList);
+            Factories.BulletFactory.AddList(BulletList);
+            Factories.SkeletonFactory.AddList(EnemyList);
             PlayerBoat.AddToManagers(mLayer);
             PlayerInstance.AddToManagers(mLayer);
-            ButtonAddBoat.AddToManagers(UIBoatLayer);
             SpeedMeter.AddToManagers(UIBoatLayer);
             base.AddToManagers();
             AddToManagersBottomUp();
@@ -157,7 +173,6 @@ namespace Pirates.Screens
                         CannonballList[i].Activity();
                     }
                 }
-                ButtonAddBoat.Activity();
                 SpeedMeter.Activity();
                 for (int i = ExplosionList.Count - 1; i > -1; i--)
                 {
@@ -165,6 +180,22 @@ namespace Pirates.Screens
                     {
                         // We do the extra if-check because activity could destroy any number of entities
                         ExplosionList[i].Activity();
+                    }
+                }
+                for (int i = BulletList.Count - 1; i > -1; i--)
+                {
+                    if (i < BulletList.Count)
+                    {
+                        // We do the extra if-check because activity could destroy any number of entities
+                        BulletList[i].Activity();
+                    }
+                }
+                for (int i = EnemyList.Count - 1; i > -1; i--)
+                {
+                    if (i < EnemyList.Count)
+                    {
+                        // We do the extra if-check because activity could destroy any number of entities
+                        EnemyList[i].Activity();
                     }
                 }
             }
@@ -183,6 +214,8 @@ namespace Pirates.Screens
             Factories.DockFactory.Destroy();
             Factories.CannonballFactory.Destroy();
             Factories.ExplosionFactory.Destroy();
+            Factories.BulletFactory.Destroy();
+            Factories.SkeletonFactory.Destroy();
             Terrain.Destroy();
             Terrain = null;
             GameScreenGum.RemoveFromManagers();
@@ -192,6 +225,8 @@ namespace Pirates.Screens
             DockList.MakeOneWay();
             CannonballList.MakeOneWay();
             ExplosionList.MakeOneWay();
+            BulletList.MakeOneWay();
+            EnemyList.MakeOneWay();
             if (PlayerBoat != null)
             {
                 PlayerBoat.Destroy();
@@ -238,11 +273,6 @@ namespace Pirates.Screens
             {
                 CannonballList[i].Destroy();
             }
-            if (ButtonAddBoat != null)
-            {
-                ButtonAddBoat.Destroy();
-                ButtonAddBoat.Detach();
-            }
             if (SpeedMeter != null)
             {
                 SpeedMeter.Destroy();
@@ -252,10 +282,36 @@ namespace Pirates.Screens
             {
                 ExplosionList[i].Destroy();
             }
+            if (ButtonPistol != null)
+            {
+                ButtonPistol.RemoveFromManagers();
+            }
+            if (ButtonShotgun != null)
+            {
+                ButtonShotgun.RemoveFromManagers();
+            }
+            for (int i = BulletList.Count - 1; i > -1; i--)
+            {
+                BulletList[i].Destroy();
+            }
+            for (int i = EnemyList.Count - 1; i > -1; i--)
+            {
+                EnemyList[i].Destroy();
+            }
+            if (InventoryBar != null)
+            {
+                InventoryBar.RemoveFromManagers();
+            }
+            if (InventoryGui != null)
+            {
+                InventoryGui.RemoveFromManagers();
+            }
             BoatList.MakeTwoWay();
             DockList.MakeTwoWay();
             CannonballList.MakeTwoWay();
             ExplosionList.MakeTwoWay();
+            BulletList.MakeTwoWay();
+            EnemyList.MakeTwoWay();
             FlatRedBall.Math.Collision.CollisionManager.Self.Relationships.Clear();
             CustomDestroy();
         }
@@ -263,6 +319,10 @@ namespace Pirates.Screens
         {
             bool oldShapeManagerSuppressAdd = FlatRedBall.Math.Geometry.ShapeManager.SuppressAddingOnVisibilityTrue;
             FlatRedBall.Math.Geometry.ShapeManager.SuppressAddingOnVisibilityTrue = true;
+            ButtonPistol.Click += OnButtonPistolClick;
+            ButtonPistol.Click += OnButtonPistolClickTunnel;
+            ButtonShotgun.Click += OnButtonShotgunClick;
+            ButtonShotgun.Click += OnButtonShotgunClickTunnel;
             if (PlayerBoat.Parent == null)
             {
                 PlayerBoat.X = 300f;
@@ -279,14 +339,6 @@ namespace Pirates.Screens
             {
                 PlayerBoat.RelativeY = -300f;
             }
-            if (PlayerBoat.Parent == null)
-            {
-                PlayerBoat.Z = 10f;
-            }
-            else
-            {
-                PlayerBoat.RelativeZ = 10f;
-            }
             PlayerBoat.RotationAcceleration = 0.025f;
             PlayerBoat.MaxRotationSpeed = 1f;
             PlayerBoat.MovementSpeed = 33f;
@@ -294,30 +346,16 @@ namespace Pirates.Screens
             PlayerBoat.CurrentHealth = 250f;
             PlayerBoat.TimeBetweenShoot = 1f;
             PlayerBoat.LastTimeShot = 0f;
-            if (PlayerInstance.Parent == null)
-            {
-                PlayerInstance.Z = 10f;
-            }
-            else
-            {
-                PlayerInstance.RelativeZ = 10f;
-            }
-            PlayerInstance.WalkingSpeed = 25f;
+            PlayerInstance.WalkingSpeed = 33f;
             PlayerInstance.WalkingSpeedModifier = 1f;
+            PlayerInstance.HandPositionX = -5f;
+            PlayerInstance.HandPositionY = -3f;
+            PlayerInstance.PlayerName = "Vanane";
             SandCollision.Visible = false;
             WaterCollision.Visible = false;
             DirtCollision.Visible = false;
             HulkCollision.Visible = false;
             RockCollision.Visible = false;
-            if (ButtonAddBoat.Parent == null)
-            {
-                ButtonAddBoat.Z = 20f;
-            }
-            else
-            {
-                ButtonAddBoat.RelativeZ = 20f;
-            }
-            ButtonAddBoat.Text = "Ajouter un bateau";
             SpeedMeter.MaxState = 5;
             FlatRedBall.Math.Geometry.ShapeManager.SuppressAddingOnVisibilityTrue = oldShapeManagerSuppressAdd;
         }
@@ -366,11 +404,34 @@ namespace Pirates.Screens
             {
                 CannonballList[i].Destroy();
             }
-            ButtonAddBoat.RemoveFromManagers();
             SpeedMeter.RemoveFromManagers();
             for (int i = ExplosionList.Count - 1; i > -1; i--)
             {
                 ExplosionList[i].Destroy();
+            }
+            if (ButtonPistol != null)
+            {
+                ButtonPistol.RemoveFromManagers();
+            }
+            if (ButtonShotgun != null)
+            {
+                ButtonShotgun.RemoveFromManagers();
+            }
+            for (int i = BulletList.Count - 1; i > -1; i--)
+            {
+                BulletList[i].Destroy();
+            }
+            for (int i = EnemyList.Count - 1; i > -1; i--)
+            {
+                EnemyList[i].Destroy();
+            }
+            if (InventoryBar != null)
+            {
+                InventoryBar.RemoveFromManagers();
+            }
+            if (InventoryGui != null)
+            {
+                InventoryGui.RemoveFromManagers();
             }
         }
         public virtual void AssignCustomVariables (bool callOnContainedElements) 
@@ -379,7 +440,6 @@ namespace Pirates.Screens
             {
                 PlayerBoat.AssignCustomVariables(true);
                 PlayerInstance.AssignCustomVariables(true);
-                ButtonAddBoat.AssignCustomVariables(true);
                 SpeedMeter.AssignCustomVariables(true);
             }
             if (PlayerBoat.Parent == null)
@@ -398,14 +458,6 @@ namespace Pirates.Screens
             {
                 PlayerBoat.RelativeY = -300f;
             }
-            if (PlayerBoat.Parent == null)
-            {
-                PlayerBoat.Z = 10f;
-            }
-            else
-            {
-                PlayerBoat.RelativeZ = 10f;
-            }
             PlayerBoat.RotationAcceleration = 0.025f;
             PlayerBoat.MaxRotationSpeed = 1f;
             PlayerBoat.MovementSpeed = 33f;
@@ -413,30 +465,16 @@ namespace Pirates.Screens
             PlayerBoat.CurrentHealth = 250f;
             PlayerBoat.TimeBetweenShoot = 1f;
             PlayerBoat.LastTimeShot = 0f;
-            if (PlayerInstance.Parent == null)
-            {
-                PlayerInstance.Z = 10f;
-            }
-            else
-            {
-                PlayerInstance.RelativeZ = 10f;
-            }
-            PlayerInstance.WalkingSpeed = 25f;
+            PlayerInstance.WalkingSpeed = 33f;
             PlayerInstance.WalkingSpeedModifier = 1f;
+            PlayerInstance.HandPositionX = -5f;
+            PlayerInstance.HandPositionY = -3f;
+            PlayerInstance.PlayerName = "Vanane";
             SandCollision.Visible = false;
             WaterCollision.Visible = false;
             DirtCollision.Visible = false;
             HulkCollision.Visible = false;
             RockCollision.Visible = false;
-            if (ButtonAddBoat.Parent == null)
-            {
-                ButtonAddBoat.Z = 20f;
-            }
-            else
-            {
-                ButtonAddBoat.RelativeZ = 20f;
-            }
-            ButtonAddBoat.Text = "Ajouter un bateau";
             SpeedMeter.MaxState = 5;
         }
         public virtual void ConvertToManuallyUpdated () 
@@ -455,11 +493,18 @@ namespace Pirates.Screens
             {
                 CannonballList[i].ConvertToManuallyUpdated();
             }
-            ButtonAddBoat.ConvertToManuallyUpdated();
             SpeedMeter.ConvertToManuallyUpdated();
             for (int i = 0; i < ExplosionList.Count; i++)
             {
                 ExplosionList[i].ConvertToManuallyUpdated();
+            }
+            for (int i = 0; i < BulletList.Count; i++)
+            {
+                BulletList[i].ConvertToManuallyUpdated();
+            }
+            for (int i = 0; i < EnemyList.Count; i++)
+            {
+                EnemyList[i].ConvertToManuallyUpdated();
             }
         }
         public static void LoadStaticContent (string contentManagerName) 
@@ -488,7 +533,6 @@ namespace Pirates.Screens
             FlatRedBall.Gum.GumIdb.UpdateDisplayToMainFrbCamera();GameScreenGum = GumRuntime.ElementSaveExtensions.CreateGueForElement( Gum.Managers.ObjectFinder.Self.GetScreen(FlatRedBall.IO.FileManager.RemoveExtension(FlatRedBall.IO.FileManager.RemovePath("content/gumproject/screens/gamescreengum.gusx"))), true);
             Pirates.Entities.Boat.LoadStaticContent(contentManagerName);
             Pirates.Entities.Player.LoadStaticContent(contentManagerName);
-            Pirates.Entities.UI.Button.LoadStaticContent(contentManagerName);
             Pirates.Entities.UI.SpeedMeter.LoadStaticContent(contentManagerName);
             CustomLoadStaticContent(contentManagerName);
         }

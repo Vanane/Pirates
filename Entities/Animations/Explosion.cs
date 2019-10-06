@@ -24,6 +24,7 @@ namespace Pirates.Entities.Animations
 
 		private void CustomInitialize()
 		{
+            this.Z = Custom.GameSettings.MidAirLevelTerrainDepth;
             this.RotationZ = FlatRedBallServices.Random.Next(-180,180);
 
             this.Call(this.Destroy).After(SpriteInstance.AnimationChains.Find(a => a.Name == "Explosion").TotalLength - TimeManager.SecondDifference);            

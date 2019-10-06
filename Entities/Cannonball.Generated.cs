@@ -167,18 +167,6 @@ namespace Pirates.Entities
             SpriteInstance.TextureScale = 1f;
             CircleInstance.Radius = 4f;
             CircleInstance.Visible = false;
-            if (Parent == null)
-            {
-                Z = 15f;
-            }
-            else if (Parent is FlatRedBall.Camera)
-            {
-                RelativeZ = 15f - 40.0f;
-            }
-            else
-            {
-                RelativeZ = 15f;
-            }
             FlyingSpeed = 50f;
             Damage = 0f;
             Range = 100f;

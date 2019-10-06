@@ -12,7 +12,6 @@
                 GumRuntime.ElementSaveExtensions.RegisterGueInstantiationType("Rectangle", typeof(Pirates.GumRuntimes.RectangleRuntime));
                 GumRuntime.ElementSaveExtensions.RegisterGueInstantiationType("Sprite", typeof(Pirates.GumRuntimes.SpriteRuntime));
                 GumRuntime.ElementSaveExtensions.RegisterGueInstantiationType("Text", typeof(Pirates.GumRuntimes.TextRuntime));
-                GumRuntime.ElementSaveExtensions.RegisterGueInstantiationType("Button", typeof(Pirates.GumRuntimes.ButtonRuntime));
                 GumRuntime.ElementSaveExtensions.RegisterGueInstantiationType("DefaultForms/Button", typeof(Pirates.GumRuntimes.DefaultForms.ButtonRuntime));
                 GumRuntime.ElementSaveExtensions.RegisterGueInstantiationType("DefaultForms/CheckBox", typeof(Pirates.GumRuntimes.DefaultForms.CheckBoxRuntime));
                 GumRuntime.ElementSaveExtensions.RegisterGueInstantiationType("DefaultForms/ColoredFrame", typeof(Pirates.GumRuntimes.DefaultForms.ColoredFrameRuntime));
@@ -31,6 +30,10 @@
                 GumRuntime.ElementSaveExtensions.RegisterGueInstantiationType("DefaultForms/TreeViewItem", typeof(Pirates.GumRuntimes.DefaultForms.TreeViewItemRuntime));
                 GumRuntime.ElementSaveExtensions.RegisterGueInstantiationType("DefaultForms/TreeViewToggleButton", typeof(Pirates.GumRuntimes.DefaultForms.TreeViewToggleButtonRuntime));
                 GumRuntime.ElementSaveExtensions.RegisterGueInstantiationType("DefaultForms/UserControl", typeof(Pirates.GumRuntimes.DefaultForms.UserControlRuntime));
+                GumRuntime.ElementSaveExtensions.RegisterGueInstantiationType("Button", typeof(Pirates.GumRuntimes.ButtonRuntime));
+                GumRuntime.ElementSaveExtensions.RegisterGueInstantiationType("InventoryForms/InventoryBar", typeof(Pirates.GumRuntimes.InventoryForms.InventoryBarRuntime));
+                GumRuntime.ElementSaveExtensions.RegisterGueInstantiationType("InventoryForms/InventoryBox", typeof(Pirates.GumRuntimes.InventoryForms.InventoryBoxRuntime));
+                GumRuntime.ElementSaveExtensions.RegisterGueInstantiationType("InventoryForms/InventoryGui", typeof(Pirates.GumRuntimes.InventoryForms.InventoryGuiRuntime));
                 GumRuntime.ElementSaveExtensions.RegisterGueInstantiationType("GameScreenGum", typeof(Pirates.GumRuntimes.GameScreenGumRuntime));
                 GumRuntime.ElementSaveExtensions.RegisterGueInstantiationType("LoadingScreenGum", typeof(Pirates.GumRuntimes.LoadingScreenGumRuntime));
                 GumRuntime.ElementSaveExtensions.RegisterGueInstantiationType("MainMenuScreenGum", typeof(Pirates.GumRuntimes.MainMenuScreenGumRuntime));

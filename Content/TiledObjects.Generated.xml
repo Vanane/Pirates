@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <objecttypes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <objecttype name="Explosion" />
+  <objecttype name="Bullet">
+    <property name="FlyingSpeed" type="float" />
+    <property name="Damage" type="float" />
+    <property name="Range" type="float" />
+  </objecttype>
   <objecttype name="Cannonball">
     <property name="FlyingSpeed" type="float" default="50" />
     <property name="Damage" type="float" default="0" />
@@ -8,5 +13,8 @@
   </objecttype>
   <objecttype name="Dock">
     <property name="IslandID" type="int" />
+  </objecttype>
+  <objecttype name="Skeleton">
+    <property name="Health" type="float" default="50" />
   </objecttype>
 </objecttypes>

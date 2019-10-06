@@ -43,22 +43,33 @@ namespace Pirates
 
         protected override void Initialize()
         {
-            #if IOS
+#if IOS
             var bounds = UIKit.UIScreen.MainScreen.Bounds;
             var nativeScale = UIKit.UIScreen.MainScreen.Scale;
             var screenWidth = (int)(bounds.Width * nativeScale);
             var screenHeight = (int)(bounds.Height * nativeScale);
             graphics.PreferredBackBufferWidth = screenWidth;
             graphics.PreferredBackBufferHeight = screenHeight;
-            #endif
-        
+#endif
+            Custom.GameSettings.Initialize();
+
+            Custom.Item.Initialize();
+            Custom.Weapon.Initialize();
+
+
             FlatRedBallServices.InitializeFlatRedBall(this, graphics);
 
 			GlobalContent.Initialize();
 			CameraSetup.SetupCamera(SpriteManager.Camera, graphics);
+
+            FlatRedBallServices.GraphicsOptions.ResolutionWidth = 1200;
+            FlatRedBallServices.GraphicsOptions.ResolutionHeight = 300;
+
 			FlatRedBall.Screens.ScreenManager.Start(typeof(Pirates.Screens.MainMenuScreen));
 
             FlatRedBallServices.GraphicsOptions.TextureFilter = Microsoft.Xna.Framework.Graphics.TextureFilter.Point;
+
+
 
             base.Initialize();
         }

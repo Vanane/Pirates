@@ -16,7 +16,9 @@ using FlatRedBall.Localization;
 using FlatRedBall.TileCollisions;
 using FlatRedBall.TileEntities;
 using FlatRedBall.TileGraphics;
+using FlatRedBall.Forms;
 using Pirates.Factories;
+using Pirates.GumRuntimes.InventoryForms;
 
 using StateInterpolationPlugin;
 
@@ -24,6 +26,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
 using Pirates.Entities;
+using Pirates.Custom;
 
 
 
@@ -31,15 +34,20 @@ namespace Pirates.Screens
 {
 	public partial class GameScreen
 	{
-
         CollidableVsTileShapeCollectionRelationship<Boat> RelBoatIsland;
         PositionedObjectVsPositionedObjectRelationship<Player, Boat> RelPlayerBoat;
         ListVsListRelationship<Boat, Cannonball> RelBoatCannonball;
+        CollidableListVsTileShapeCollectionRelationship<Bullet> RelBulletTerrain;
+        CollidableVsTileShapeCollectionRelationship<Player> RelPlayerTerrain;
+
+        PositionedObjectVsListRelationship<WeaponEntity, Skeleton> RelPlayerWeaponEnemies;
+    
 
         Dock NearToADock;
         Action ControlMethod;
 
-        bool MainMenuOpened;
+        bool IsMainMenuOpened;
+        bool IsInventoryOpened;
 
         PositionedObject EntityToFollowByCam;
 
@@ -55,7 +63,10 @@ namespace Pirates.Screens
             InitializeUI();
             InitializeCollisionsRelations();
             InitializeInstances();
+            InitializeEvents();
             ControlMethod = BoatControls;
+
+
 
             Camera.Main.Tween(SetOrthogonalHeight,
                         from: Camera.Main.OrthogonalHeight * 1.25f,
@@ -64,14 +75,21 @@ namespace Pirates.Screens
                         interpolation: FlatRedBall.Glue.StateInterpolation.InterpolationType.Quadratic,
                         easing: FlatRedBall.Glue.StateInterpolation.Easing.InOut
                         );
-        }
 
+            GameScreenGum.MoveToLayer(UIBoatLayerGum);
+
+
+            SkeletonFactory.CreateNew(250, -250);
+        }
 
         void CustomActivity(bool firstTimeCalled)
         {
             MovingActivity();
             CameraActivity();
             CollisionActivity();
+            InterfaceActivity();
+
+            FlatRedBall.Debugging.Debugger.Write(FlatRedBall.Gui.GuiManager.Cursor.WindowOver);
         }
 
         void CustomDestroy()
@@ -90,8 +108,6 @@ namespace Pirates.Screens
         {
             Camera.Main.X = EntityToFollowByCam.X;
             Camera.Main.Y = EntityToFollowByCam.Y;
-
-
         }
 
         void MovingActivity()
@@ -192,14 +208,36 @@ namespace Pirates.Screens
             SpeedMeter.SetCaseScale(5, -1, 3, 0);
             SpeedMeter.SetState(PlayerBoat.SpeedScale);
 
-            ButtonAddBoat.AttachTo(Camera.Main);
-            ButtonAddBoat.RelativeZ = -40; // so that it's "in front" of the camera
-            ButtonAddBoat.RelativeX = Camera.Main.OrthogonalWidth / 2.0f - (32 + SpeedMeter.mSpriteInstance.Width / 2);
-            ButtonAddBoat.RelativeY = (32 + SpeedMeter.mSpriteInstance.Height / 2);
-            ButtonAddBoat.Click += (x) => { if (BoatList.Count < 1) { Boat b = new Boat(); b.Name = "TestBoat"; b.MaxHealth = 100; b.CurrentHealth = 10; b.X = 560; b.Y = -336; BoatList.Add(b); } };
+
+            ButtonPistolClick += (x) =>
+            {
+                PlayerInstance.EquipItem(Weapon.ExistingWeapons.First(w => w.ItemName == "Pistol"));
+            };
+            ButtonShotgunClick += (x) =>
+            {
+                PlayerInstance.AddItemToInventory(Item.ExistingItems.First(y => y.ItemName=="Pistol"));
+                PlayerInstance.AddItemToInventory(Item.ExistingItems.First(y => y.ItemName=="Sword"));
+            };            
 
             FlatRedBallServices.IsWindowsCursorVisible = true;
+
+            (InventoryGui.GetGraphicalUiElementByName("TextPlayerName") as GumRuntimes.TextRuntime).Text = PlayerInstance.PlayerName;
+
+            InventoryGui.PlaceCasesInInventoryPanel(PlayerInstance.PlayerInventory.Length, 8);
+
+            InventoryGui.OnItemMovedCase += InventoryGuiOnItemMoved;
+
+            foreach (var box in InventoryBar.GetInventoryBoxList())
+            {
+                box.Click += InventoryBarOnBoxClicked;
+            }
         }
+
+        void InitializeEvents()
+        {
+            PlayerInstance.ItemAddedToInventory += OnItemAddedToPlayer;
+        }
+
 
         void InitializeCollisionsRelations()
         {
@@ -220,6 +258,20 @@ namespace Pirates.Screens
             RelBoatCannonball.SetEventOnlyCollision();
             RelBoatCannonball.CollisionOccurred += BoatCollidedWithCannonball;
 
+            RelBulletTerrain = CollisionManager.Self.CreateTileRelationship(
+                BulletList, RockCollision);
+            RelBulletTerrain.CollisionOccurred += BulletCollidedWithTerrain;
+
+            RelPlayerTerrain = CollisionManager.Self.CreateTileRelationship(
+                PlayerInstance, RockCollision);
+            RelPlayerTerrain.SetMoveCollision(1, 0);
+
+            RelPlayerWeaponEnemies = CollisionManager.Self.CreateRelationship(
+                PlayerInstance.mWeaponEntity, EnemyList);
+            RelPlayerWeaponEnemies.SetEventOnlyCollision();
+            RelPlayerWeaponEnemies.CollisionOccurred += PlayerWeaponHitEnemy;
+
+
             TileEntityInstantiator.CreateEntitiesFrom(Terrain);
         }
 
@@ -234,11 +286,122 @@ namespace Pirates.Screens
         }
 
 
+        private void BoatCollidedWithCannonball(Boat b, Cannonball c)
+        {
+            b.TakeDamage(c.Damage);
+            c.Destroy();
+        }
+
+
+        private void BulletCollidedWithTerrain(Bullet b, TileShapeCollection Tiles)
+        {
+            b.HitTheTerrain();
+        }
+
+        private void PlayerWeaponHitEnemy(WeaponEntity weapon, Skeleton enemy)
+        {
+            if(PlayerInstance.IsAttacking)
+                enemy.ReceiveDamage(PlayerInstance.GetEquippedWeapon().Damage);
+        }
+
+
+        /* * * * * * * * * *
+         * PARTIE CONTROLS *
+         * * * * * * * * * */
+
+        void PlayerControls()
+        {
+            int HorizontalMovement = 0;
+            int VerticalMovement = 0;
+
+            PlayerInstance.Velocity = new Vector3(0, 0, 0);
+
+            bool HoveringUI = false;
+            foreach (var v in GameScreenGum.ContainedElements)
+            {
+                if (v.HasCursorOver(FlatRedBall.Gui.GuiManager.Cursor))
+                {
+                    HoveringUI = true;
+                    break;
+                }
+            }
+
+            if (InputManager.Keyboard.KeyPushed(Keys.Tab))
+            {
+                ToggleInventory();
+            }
+
+            if (InputManager.Mouse.ButtonPushed(FlatRedBall.Input.Mouse.MouseButtons.LeftButton))
+            {
+                if (!HoveringUI)
+                {
+                    //Vector between the Cursor position, relative to world, and the player.
+                    Vector2 PlayerToMouse = new Vector2(
+                        InputManager.Mouse.WorldXAt(0), InputManager.Mouse.WorldYAt(0)) - new Vector2(PlayerInstance.Position.X, PlayerInstance.Position.Y);
+
+                    //We then normalize (reduce the length to 1 but keeping the direction)
+                    PlayerToMouse.Normalize();
+
+                    //Tell the player to attack. Player class will determine wether it's ok or not
+                    PlayerInstance.Attack(PlayerToMouse);
+                }
+            }
+
+            if (InputManager.Keyboard.KeyDown(Keys.Z))
+                PlayerInstance.MoveUp();
+            else if (InputManager.Keyboard.KeyDown(Keys.S))
+                PlayerInstance.MoveDown();
+
+            if (InputManager.Keyboard.KeyDown(Keys.Q))
+                PlayerInstance.MoveLeft();
+            else if (InputManager.Keyboard.KeyDown(Keys.D))
+                PlayerInstance.MoveRight();
+
+
+            if (InputManager.Keyboard.KeyPushed(Keys.E))
+            {
+                if (Vector3.Distance(PlayerInstance.Position, PlayerBoat.Position) < 32)
+                {
+                    PlayerInstance.Visible = false;
+                    DezoomCamera();
+                    ControlMethod = BoatControls;
+                    EntityToFollowByCam = PlayerBoat;
+                }
+            }
+
+            InventoryBarControls();
+        }
+
+        private void InventoryBarControls()
+        {
+            if (InputManager.Keyboard.KeyPushed(Keys.D1))
+            {
+                InventoryBar.SetSelectedItemCase(0);
+                PlayerInstance.EquipItem(InventoryBar.GetSelectedItem());
+            }
+            else if (InputManager.Keyboard.KeyPushed(Keys.D2))
+            {
+                InventoryBar.SetSelectedItemCase(1);
+                PlayerInstance.EquipItem(InventoryBar.GetSelectedItem());
+            }
+            else if (InputManager.Keyboard.KeyPushed(Keys.D3))
+            {
+                InventoryBar.SetSelectedItemCase(2);
+                PlayerInstance.EquipItem(InventoryBar.GetSelectedItem());
+            }
+            else if (InputManager.Keyboard.KeyPushed(Keys.D4))
+            {
+                InventoryBar.SetSelectedItemCase(3);
+                PlayerInstance.EquipItem(InventoryBar.GetSelectedItem());
+            }
+        }
+
+
         void BoatControls()
         {
             int RotationDirection = 0;
 
-            if(!PlayerBoat.Anchored && !MainMenuOpened)
+            if (!PlayerBoat.Anchored && !IsMainMenuOpened)
             {
                 if (InputManager.Keyboard.KeyDown(Keys.Left))
                     RotationDirection = 1;
@@ -267,15 +430,8 @@ namespace Pirates.Screens
                     (Math.Abs(PlayerBoat.RotationZVelocity) > PlayerBoat.RotationAcceleration)
                     ? PlayerBoat.RotationZVelocity - PlayerBoat.RotationAcceleration * Math.Sign(PlayerBoat.RotationZVelocity) : 0;
             }
-            /*else
-            {
-                //Sinon, si l'une des touches est appuyée on augmente la vitesse de rotation dans le sens correspondant
-                PlayerBoat.RotationZVelocity +=
-                    (PlayerBoat.RotationZVelocity < PlayerBoat.MaxRotationSpeed && PlayerBoat.RotationZVelocity > -PlayerBoat.MaxRotationSpeed)
-                    ? PlayerBoat.RotationAcceleration * RotationDirection : 0;
-                Console.WriteLine(PlayerBoat.RotationZVelocity);
-            }*/
 
+            //Sinon, si l'une des touches est appuyée on augmente la vitesse de rotation dans le sens correspondant
             else if (RotationDirection == 1)
             {
                 PlayerBoat.RotationZVelocity = Math.Min(PlayerBoat.RotationZVelocity + PlayerBoat.RotationAcceleration, PlayerBoat.MaxRotationSpeed);
@@ -316,54 +472,43 @@ namespace Pirates.Screens
             SpeedMeter.SetState(PlayerBoat.SpeedScale);
         }
 
-
-        void PlayerControls()
+        private void InterfaceActivity()
         {
-            int HorizontalMovement = 0;
-            int VerticalMovement = 0;
-
-
-            PlayerInstance.Velocity = new Vector3(0,0,0);
-
-           if (InputManager.Keyboard.KeyDown(Keys.Z))
+            if (IsInventoryOpened)
             {
-                VerticalMovement = 1;
-            }
-            else if (InputManager.Keyboard.KeyDown(Keys.S))
-            {
-                VerticalMovement = -1;
+                InventoryGui.RefreshHeldItem();
             }
 
-            if (InputManager.Keyboard.KeyDown(Keys.Q))
-            {
-                HorizontalMovement = -1;
-            }
-            else if (InputManager.Keyboard.KeyDown(Keys.D))
-            {
-                HorizontalMovement = 1;
-            }
-
-            PlayerInstance.XVelocity = PlayerInstance.WalkingSpeed * PlayerInstance.WalkingSpeedModifier * HorizontalMovement;
-            PlayerInstance.YVelocity = PlayerInstance.WalkingSpeed * PlayerInstance.WalkingSpeedModifier * VerticalMovement;
-
-            if (InputManager.Keyboard.KeyPushed(Keys.E))
-            {
-                if (Vector3.Distance(PlayerInstance.Position, PlayerBoat.Position) < 32)
-                {
-                    PlayerInstance.Visible = false;
-                    DezoomCamera();
-                    ControlMethod = BoatControls;
-                    EntityToFollowByCam = PlayerBoat;
-                }
-            }
         }
 
 
 
-        void BoatCollidedWithCannonball(Boat b, Cannonball c)
+        private void ToggleInventory()
         {
-            b.TakeDamage(c.Damage);
-            c.Destroy();
+            InventoryGui.SetVisibility(!InventoryGui.GetVisibility());
+            InventoryBar.SetVisibility(!InventoryGui.GetVisibility());
+
+            IsInventoryOpened = InventoryGui.GetVisibility();
+            InventoryGui.DisplayItemsOnUI(PlayerInstance.PlayerInventory);
+            InventoryBar.SetAllItems(InventoryGui.GetInventoryBar().GetAllItems());
         }
+
+        private void InventoryGuiOnItemMoved(object o, ItemMovedCaseEventArgs e)
+        {
+            PlayerInstance.SwitchItemsByIndex(e.PreviousBox.BoxIndex, e.NewBox.BoxIndex);
+        }
+
+        private void InventoryBarOnBoxClicked(FlatRedBall.Gui.IWindow sender)
+        {
+            InventoryBar.SetSelectedItemCase((InventoryBoxRuntime)sender);
+        }
+
+        private void OnItemAddedToPlayer(object o, ItemAddedEventArgs e)
+        {
+            InventoryGui.DisplayItemsOnUI(((Player)o).PlayerInventory);
+        }
+
+
+
     }
 }

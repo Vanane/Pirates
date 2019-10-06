@@ -1,0 +1,46 @@
+[
+  {
+    "ItemName": "Pistol",
+    "SpritePath": "Content\\sprites\\weapons\\pistol.png",
+    "Type": "Ranged",
+    "HandPositionX": "3",
+    "HandPositionY": "2",
+    "FlyingSpeed": 100,
+    "Range": 100,
+    "Cooldown": 1,
+    "Damage": 2,
+    "NumberOfBullets": 1,
+    "DelayBetweenBullets": 0,
+    "SpreadAngle": 10
+  },
+
+  {
+    "ItemName": "Shotgun",
+    "SpritePath": "Content\\sprites\\weapons\\shotgun.png",
+    "Type": "Ranged",
+    "HandPositionX": "3",
+    "HandPositionY": "2",
+    "FlyingSpeed": 50,
+    "Range": 50,
+    "Cooldown": 2,
+    "Damage": 2,
+    "NumberOfBullets": 5,
+    "DelayBetweenBullets": 0.01,
+    "SpreadAngle": 60
+  },
+  {
+    "ItemName": "Sword",
+    "SpritePath": "Content\\sprites\\weapons\\sword.png",
+    "Type": "Melee",
+    "HandPositionX": "6",
+    "HandPositionY": "-6",
+    "FlyingSpeed": 50,
+    "Range": 50,
+    "Cooldown": 2,
+    "Damage": 2,
+    "NumberOfBullets": 5,
+    "DelayBetweenBullets": 0.01,
+    "SpreadAngle": 60
+  }
+
+]

@@ -20,11 +20,12 @@ namespace Pirates.Entities
         /// </summary>
 		private void CustomInitialize()
 		{
+            this.Z = Custom.GameSettings.GroundLevelSpritesDepth;
 
 
-		}
+        }
 
-		private void CustomActivity()
+        private void CustomActivity()
 		{
 
 

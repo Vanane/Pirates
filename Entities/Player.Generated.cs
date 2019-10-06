@@ -22,8 +22,7 @@ namespace Pirates.Entities
         static object mLockObject = new object();
         static System.Collections.Generic.List<string> mRegisteredUnloads = new System.Collections.Generic.List<string>();
         static System.Collections.Generic.List<string> LoadedContentManagers = new System.Collections.Generic.List<string>();
-        protected static Microsoft.Xna.Framework.Graphics.Texture2D PlayerSprite;
-        protected static FlatRedBall.Graphics.Animation.AnimationChainList PlayerAnimationFile;
+        protected static FlatRedBall.Graphics.Animation.AnimationChainList AnimationChain;
         
         private FlatRedBall.Sprite SpriteInstance;
         private FlatRedBall.Graphics.Text TextInstance;
@@ -39,8 +38,13 @@ namespace Pirates.Entities
                 mHitbox = value;
             }
         }
+        private Pirates.Entities.WeaponEntity WeaponInstance;
         public float WalkingSpeed;
         public float WalkingSpeedModifier;
+        public float HandPositionX;
+        public float HandPositionY;
+        public float LastShotTime;
+        public string PlayerName;
         public event System.EventHandler BeforeVisibleSet;
         public event System.EventHandler AfterVisibleSet;
         protected bool mVisible = true;
@@ -117,6 +121,8 @@ namespace Pirates.Entities
             TextInstance.Name = "TextInstance";
             mHitbox = new FlatRedBall.Math.Geometry.AxisAlignedRectangle();
             mHitbox.Name = "mHitbox";
+            WeaponInstance = new Pirates.Entities.WeaponEntity(ContentManagerName, false);
+            WeaponInstance.Name = "WeaponInstance";
             
             PostInitialize();
             if (addToManagers)
@@ -135,6 +141,7 @@ namespace Pirates.Entities
                 TextInstance.SetPixelPerfectScale(LayerProvidedByContainer);
             }
             FlatRedBall.Math.Geometry.ShapeManager.AddToLayer(mHitbox, LayerProvidedByContainer);
+            WeaponInstance.ReAddToManagers(LayerProvidedByContainer);
         }
         public virtual void AddToManagers (FlatRedBall.Graphics.Layer layerToAddTo) 
         {
@@ -147,12 +154,14 @@ namespace Pirates.Entities
                 TextInstance.SetPixelPerfectScale(LayerProvidedByContainer);
             }
             FlatRedBall.Math.Geometry.ShapeManager.AddToLayer(mHitbox, LayerProvidedByContainer);
+            WeaponInstance.AddToManagers(LayerProvidedByContainer);
             AddToManagersBottomUp(layerToAddTo);
             CustomInitialize();
         }
         public virtual void Activity () 
         {
             
+            WeaponInstance.Activity();
             CustomActivity();
         }
         public virtual void Destroy () 
@@ -170,6 +179,11 @@ namespace Pirates.Entities
             if (Hitbox != null)
             {
                 FlatRedBall.Math.Geometry.ShapeManager.Remove(Hitbox);
+            }
+            if (WeaponInstance != null)
+            {
+                WeaponInstance.Destroy();
+                WeaponInstance.Detach();
             }
             mGeneratedCollision.RemoveFromManagers(clearThis: false);
             CustomDestroy();
@@ -193,7 +207,7 @@ namespace Pirates.Entities
             }
             SpriteInstance.Texture = null;
             SpriteInstance.TextureScale = 0.75f;
-            SpriteInstance.AnimationChains = PlayerAnimationFile;
+            SpriteInstance.AnimationChains = AnimationChain;
             SpriteInstance.CurrentChainName = "Idle";
             if (TextInstance.Parent == null)
             {
@@ -227,6 +241,11 @@ namespace Pirates.Entities
             Hitbox.Height = 32f;
             Hitbox.Visible = false;
             Hitbox.RepositionDirections = FlatRedBall.Math.Geometry.RepositionDirections.All;
+            if (WeaponInstance.Parent == null)
+            {
+                WeaponInstance.CopyAbsoluteToRelative();
+                WeaponInstance.AttachTo(this, false);
+            }
             mGeneratedCollision = new FlatRedBall.Math.Geometry.ShapeCollection();
             mGeneratedCollision.AxisAlignedRectangles.AddOneWay(mHitbox);
             FlatRedBall.Math.Geometry.ShapeManager.SuppressAddingOnVisibilityTrue = oldShapeManagerSuppressAdd;
@@ -250,12 +269,14 @@ namespace Pirates.Entities
             {
                 FlatRedBall.Math.Geometry.ShapeManager.RemoveOneWay(Hitbox);
             }
+            WeaponInstance.RemoveFromManagers();
             mGeneratedCollision.RemoveFromManagers(clearThis: false);
         }
         public virtual void AssignCustomVariables (bool callOnContainedElements) 
         {
             if (callOnContainedElements)
             {
+                WeaponInstance.AssignCustomVariables(true);
             }
             if (SpriteInstance.Parent == null)
             {
@@ -267,7 +288,7 @@ namespace Pirates.Entities
             }
             SpriteInstance.Texture = null;
             SpriteInstance.TextureScale = 0.75f;
-            SpriteInstance.AnimationChains = PlayerAnimationFile;
+            SpriteInstance.AnimationChains = AnimationChain;
             SpriteInstance.CurrentChainName = "Idle";
             TextInstance.DisplayText = "Player";
             TextInstance.HorizontalAlignment = FlatRedBall.Graphics.HorizontalAlignment.Center;
@@ -291,18 +312,6 @@ namespace Pirates.Entities
             Hitbox.Height = 32f;
             Hitbox.Visible = false;
             Hitbox.RepositionDirections = FlatRedBall.Math.Geometry.RepositionDirections.All;
-            if (Parent == null)
-            {
-                Z = 15f;
-            }
-            else if (Parent is FlatRedBall.Camera)
-            {
-                RelativeZ = 15f - 40.0f;
-            }
-            else
-            {
-                RelativeZ = 15f;
-            }
         }
         public virtual void ConvertToManuallyUpdated () 
         {
@@ -310,6 +319,7 @@ namespace Pirates.Entities
             FlatRedBall.SpriteManager.ConvertToManuallyUpdated(this);
             FlatRedBall.SpriteManager.ConvertToManuallyUpdated(SpriteInstance);
             FlatRedBall.Graphics.TextManager.ConvertToManuallyUpdated(TextInstance);
+            WeaponInstance.ConvertToManuallyUpdated();
         }
         public static void LoadStaticContent (string contentManagerName) 
         {
@@ -346,17 +356,13 @@ namespace Pirates.Entities
                         mRegisteredUnloads.Add(ContentManagerName);
                     }
                 }
-                if (!FlatRedBall.FlatRedBallServices.IsLoaded<Microsoft.Xna.Framework.Graphics.Texture2D>(@"content/entities/player/playersprite.png", ContentManagerName))
+                if (!FlatRedBall.FlatRedBallServices.IsLoaded<FlatRedBall.Graphics.Animation.AnimationChainList>(@"content/sprites/player/animationchain.achx", ContentManagerName))
                 {
                     registerUnload = true;
                 }
-                PlayerSprite = FlatRedBall.FlatRedBallServices.Load<Microsoft.Xna.Framework.Graphics.Texture2D>(@"content/entities/player/playersprite.png", ContentManagerName);
-                if (!FlatRedBall.FlatRedBallServices.IsLoaded<FlatRedBall.Graphics.Animation.AnimationChainList>(@"content/entities/player/playeranimationfile.achx", ContentManagerName))
-                {
-                    registerUnload = true;
-                }
-                PlayerAnimationFile = FlatRedBall.FlatRedBallServices.Load<FlatRedBall.Graphics.Animation.AnimationChainList>(@"content/entities/player/playeranimationfile.achx", ContentManagerName);
+                AnimationChain = FlatRedBall.FlatRedBallServices.Load<FlatRedBall.Graphics.Animation.AnimationChainList>(@"content/sprites/player/animationchain.achx", ContentManagerName);
             }
+            Pirates.Entities.WeaponEntity.LoadStaticContent(contentManagerName);
             if (registerUnload && ContentManagerName != FlatRedBall.FlatRedBallServices.GlobalContentManager)
             {
                 lock (mLockObject)
@@ -379,13 +385,9 @@ namespace Pirates.Entities
             }
             if (LoadedContentManagers.Count == 0)
             {
-                if (PlayerSprite != null)
+                if (AnimationChain != null)
                 {
-                    PlayerSprite= null;
-                }
-                if (PlayerAnimationFile != null)
-                {
-                    PlayerAnimationFile= null;
+                    AnimationChain= null;
                 }
             }
         }
@@ -394,10 +396,8 @@ namespace Pirates.Entities
         {
             switch(memberName)
             {
-                case  "PlayerSprite":
-                    return PlayerSprite;
-                case  "PlayerAnimationFile":
-                    return PlayerAnimationFile;
+                case  "AnimationChain":
+                    return AnimationChain;
             }
             return null;
         }
@@ -405,10 +405,8 @@ namespace Pirates.Entities
         {
             switch(memberName)
             {
-                case  "PlayerSprite":
-                    return PlayerSprite;
-                case  "PlayerAnimationFile":
-                    return PlayerAnimationFile;
+                case  "AnimationChain":
+                    return AnimationChain;
             }
             return null;
         }
@@ -416,10 +414,8 @@ namespace Pirates.Entities
         {
             switch(memberName)
             {
-                case  "PlayerSprite":
-                    return PlayerSprite;
-                case  "PlayerAnimationFile":
-                    return PlayerAnimationFile;
+                case  "AnimationChain":
+                    return AnimationChain;
             }
             return null;
         }
@@ -435,6 +431,7 @@ namespace Pirates.Entities
             FlatRedBall.Instructions.InstructionManager.IgnorePausingFor(SpriteInstance);
             FlatRedBall.Instructions.InstructionManager.IgnorePausingFor(TextInstance);
             FlatRedBall.Instructions.InstructionManager.IgnorePausingFor(Hitbox);
+            WeaponInstance.SetToIgnorePausing();
         }
         public virtual void MoveToLayer (FlatRedBall.Graphics.Layer layerToMoveTo) 
         {
@@ -454,6 +451,7 @@ namespace Pirates.Entities
                 layerToRemoveFrom.Remove(Hitbox);
             }
             FlatRedBall.Math.Geometry.ShapeManager.AddToLayer(Hitbox, layerToMoveTo);
+            WeaponInstance.MoveToLayer(layerToMoveTo);
             LayerProvidedByContainer = layerToMoveTo;
         }
     }

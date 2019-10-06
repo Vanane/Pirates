@@ -180,18 +180,6 @@ namespace Pirates.Entities.Animations
             {
                 SpriteInstance.RelativeRotationZ = 0f;
             }
-            if (Parent == null)
-            {
-                Z = 20f;
-            }
-            else if (Parent is FlatRedBall.Camera)
-            {
-                RelativeZ = 20f - 40.0f;
-            }
-            else
-            {
-                RelativeZ = 20f;
-            }
         }
         public virtual void ConvertToManuallyUpdated () 
         {

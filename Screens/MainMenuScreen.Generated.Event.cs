@@ -49,5 +49,12 @@ namespace Pirates.Screens
                 ButtonSwitchFullscreenClick(window);
             }
         }
+        void OnButtonApplyClickTunnel (FlatRedBall.Gui.IWindow window) 
+        {
+            if (this.ButtonApplyClick != null)
+            {
+                ButtonApplyClick(window);
+            }
+        }
     }
 }

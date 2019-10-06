@@ -25,11 +25,13 @@ namespace Pirates.Screens
         private Pirates.GumRuntimes.DefaultForms.SliderRuntime SliderVolume;
         private Pirates.GumRuntimes.TextRuntime TextVolumeLevel;
         private Pirates.GumRuntimes.ButtonRuntime ButtonSwitchFullscreen;
+        private Pirates.GumRuntimes.ButtonRuntime ButtonApply;
         public event FlatRedBall.Gui.WindowEvent ButtonPlayClick;
         public event FlatRedBall.Gui.WindowEvent ButtonSettingsClick;
         public event FlatRedBall.Gui.WindowEvent ButtonQuitClick;
         public event FlatRedBall.Gui.WindowEvent ButtonBackClick;
         public event FlatRedBall.Gui.WindowEvent ButtonSwitchFullscreenClick;
+        public event FlatRedBall.Gui.WindowEvent ButtonApplyClick;
         public MainMenuScreen () 
         	: base ("MainMenuScreen")
         {
@@ -46,6 +48,7 @@ namespace Pirates.Screens
             SliderVolume = MainMenuScreenGum.GetGraphicalUiElementByName("SliderVolume") as Pirates.GumRuntimes.DefaultForms.SliderRuntime;
             TextVolumeLevel = MainMenuScreenGum.GetGraphicalUiElementByName("TextVolumeLevel") as Pirates.GumRuntimes.TextRuntime;
             ButtonSwitchFullscreen = MainMenuScreenGum.GetGraphicalUiElementByName("ButtonSwitchFullscreen") as Pirates.GumRuntimes.ButtonRuntime;
+            ButtonApply = MainMenuScreenGum.GetGraphicalUiElementByName("ButtonApply") as Pirates.GumRuntimes.ButtonRuntime;
             
             
             PostInitialize();
@@ -119,6 +122,10 @@ namespace Pirates.Screens
             {
                 ButtonSwitchFullscreen.RemoveFromManagers();
             }
+            if (ButtonApply != null)
+            {
+                ButtonApply.RemoveFromManagers();
+            }
             FlatRedBall.Math.Collision.CollisionManager.Self.Relationships.Clear();
             CustomDestroy();
         }
@@ -136,6 +143,8 @@ namespace Pirates.Screens
             ButtonBack.Click += OnButtonBackClickTunnel;
             ButtonSwitchFullscreen.Click += OnButtonSwitchFullscreenClick;
             ButtonSwitchFullscreen.Click += OnButtonSwitchFullscreenClickTunnel;
+            ButtonApply.Click += OnButtonApplyClick;
+            ButtonApply.Click += OnButtonApplyClickTunnel;
             FlatRedBall.Math.Geometry.ShapeManager.SuppressAddingOnVisibilityTrue = oldShapeManagerSuppressAdd;
         }
         public virtual void AddToManagersBottomUp () 
@@ -180,6 +189,10 @@ namespace Pirates.Screens
             if (ButtonSwitchFullscreen != null)
             {
                 ButtonSwitchFullscreen.RemoveFromManagers();
+            }
+            if (ButtonApply != null)
+            {
+                ButtonApply.RemoveFromManagers();
             }
         }
         public virtual void AssignCustomVariables (bool callOnContainedElements) 

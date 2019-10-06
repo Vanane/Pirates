@@ -27,7 +27,7 @@
                         case  VariableState.Default:
                             InnerPanelInstance.Parent = this.ContainedElements.FirstOrDefault(item =>item.Name == "ClipContainerInstance") ?? this;
                             Height = 260f;
-                            Width = 243f;
+                            Width = 651f;
                             ColoredFrameInstance.Height = 0f;
                             ColoredFrameInstance.HeightUnits = Gum.DataTypes.DimensionUnitType.RelativeToContainer;
                             ColoredFrameInstance.Width = 0f;
@@ -275,7 +275,7 @@
                             this.VerticalScrollBarInstance.YUnits = Gum.Converters.GeneralUnitType.PixelsFromMiddle;
                         }
                         setWidthFirstValue = true;
-                        WidthFirstValue = 243f;
+                        WidthFirstValue = 651f;
                         break;
                 }
                 switch(secondState)
@@ -406,7 +406,7 @@
                             this.VerticalScrollBarInstance.YUnits = Gum.Converters.GeneralUnitType.PixelsFromMiddle;
                         }
                         setWidthSecondValue = true;
-                        WidthSecondValue = 243f;
+                        WidthSecondValue = 651f;
                         break;
                 }
                 if (setClipContainerInstanceHeightFirstValue && setClipContainerInstanceHeightSecondValue)
@@ -901,7 +901,7 @@
                             SetsValue = true,
                             Name = "Width",
                             Type = "float",
-                            Value = Width + 243f
+                            Value = Width + 651f
                         }
                         );
                         newState.Variables.Add(new Gum.DataTypes.Variables.VariableSave()

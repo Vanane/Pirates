@@ -166,18 +166,6 @@ namespace Pirates.Entities
             TextInstance.Visible = false;
             CircleInstance.Radius = 48f;
             CircleInstance.Visible = false;
-            if (Parent == null)
-            {
-                Z = 15f;
-            }
-            else if (Parent is FlatRedBall.Camera)
-            {
-                RelativeZ = 15f - 40.0f;
-            }
-            else
-            {
-                RelativeZ = 15f;
-            }
         }
         public virtual void ConvertToManuallyUpdated () 
         {

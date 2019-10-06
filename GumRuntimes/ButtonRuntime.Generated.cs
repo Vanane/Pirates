@@ -1,7 +1,7 @@
     using System.Linq;
     namespace Pirates.GumRuntimes
     {
-        public partial class ButtonRuntime : Pirates.GumRuntimes.RectangleRuntime
+        public partial class ButtonRuntime : Pirates.GumRuntimes.ContainerRuntime
         {
             #region State Enums
             public enum VariableState
@@ -25,37 +25,31 @@
                     switch(mCurrentVariableState)
                     {
                         case  VariableState.Default:
-                            Alpha = 255;
-                            Blue = 255;
-                            Green = 255;
-                            Height = 102f;
-                            HeightUnits = Gum.DataTypes.DimensionUnitType.Absolute;
-                            Red = 255;
-                            Visible = true;
-                            Width = 204f;
-                            WidthUnits = Gum.DataTypes.DimensionUnitType.Absolute;
-                            X = 0f;
-                            XOrigin = RenderingLibrary.Graphics.HorizontalAlignment.Left;
-                            XUnits = Gum.Converters.GeneralUnitType.PixelsFromSmall;
-                            Y = 0f;
-                            YOrigin = RenderingLibrary.Graphics.VerticalAlignment.Top;
-                            YUnits = Gum.Converters.GeneralUnitType.PixelsFromSmall;
-                            ColoredRectangleInstance.Blue = 150;
-                            ColoredRectangleInstance.Green = 150;
-                            ColoredRectangleInstance.Height = 100f;
-                            ColoredRectangleInstance.HeightUnits = Gum.DataTypes.DimensionUnitType.Percentage;
-                            ColoredRectangleInstance.Red = 150;
-                            ColoredRectangleInstance.Width = 100f;
-                            ColoredRectangleInstance.WidthUnits = Gum.DataTypes.DimensionUnitType.Percentage;
+                            Height = 75f;
+                            Width = 25f;
+                            WidthUnits = Gum.DataTypes.DimensionUnitType.Percentage;
+                            BackgroundRectangle.Blue = 128;
+                            BackgroundRectangle.Green = 128;
+                            BackgroundRectangle.Height = 100f;
+                            BackgroundRectangle.HeightUnits = Gum.DataTypes.DimensionUnitType.Percentage;
+                            BackgroundRectangle.Red = 128;
+                            BackgroundRectangle.Width = 100f;
+                            BackgroundRectangle.WidthUnits = Gum.DataTypes.DimensionUnitType.Percentage;
+                            BackgroundRectangle.XOrigin = RenderingLibrary.Graphics.HorizontalAlignment.Left;
+                            BackgroundRectangle.XUnits = Gum.Converters.GeneralUnitType.PixelsFromSmall;
+                            BackgroundRectangle.YOrigin = RenderingLibrary.Graphics.VerticalAlignment.Top;
+                            BackgroundRectangle.YUnits = Gum.Converters.GeneralUnitType.PixelsFromSmall;
                             TextInstance.Font = "Vivaldi";
                             TextInstance.FontSize = 48;
                             TextInstance.Height = 100f;
                             TextInstance.HeightUnits = Gum.DataTypes.DimensionUnitType.Percentage;
                             TextInstance.HorizontalAlignment = RenderingLibrary.Graphics.HorizontalAlignment.Center;
-                            TextInstance.Text = "Button";
                             TextInstance.VerticalAlignment = RenderingLibrary.Graphics.VerticalAlignment.Center;
-                            TextInstance.Width = 100f;
                             TextInstance.WidthUnits = Gum.DataTypes.DimensionUnitType.Percentage;
+                            TextInstance.XOrigin = RenderingLibrary.Graphics.HorizontalAlignment.Left;
+                            TextInstance.XUnits = Gum.Converters.GeneralUnitType.PixelsFromSmall;
+                            TextInstance.YOrigin = RenderingLibrary.Graphics.VerticalAlignment.Top;
+                            TextInstance.YUnits = Gum.Converters.GeneralUnitType.PixelsFromSmall;
                             break;
                     }
                 }
@@ -70,46 +64,30 @@
                     throw new System.Exception("interpolationValue cannot be NaN");
                 }
                 #endif
-                bool setAlphaFirstValue = false;
-                bool setAlphaSecondValue = false;
-                int AlphaFirstValue= 0;
-                int AlphaSecondValue= 0;
-                bool setBlueFirstValue = false;
-                bool setBlueSecondValue = false;
-                int BlueFirstValue= 0;
-                int BlueSecondValue= 0;
-                bool setColoredRectangleInstanceBlueFirstValue = false;
-                bool setColoredRectangleInstanceBlueSecondValue = false;
-                int ColoredRectangleInstanceBlueFirstValue= 0;
-                int ColoredRectangleInstanceBlueSecondValue= 0;
-                bool setColoredRectangleInstanceGreenFirstValue = false;
-                bool setColoredRectangleInstanceGreenSecondValue = false;
-                int ColoredRectangleInstanceGreenFirstValue= 0;
-                int ColoredRectangleInstanceGreenSecondValue= 0;
-                bool setColoredRectangleInstanceHeightFirstValue = false;
-                bool setColoredRectangleInstanceHeightSecondValue = false;
-                float ColoredRectangleInstanceHeightFirstValue= 0;
-                float ColoredRectangleInstanceHeightSecondValue= 0;
-                bool setColoredRectangleInstanceRedFirstValue = false;
-                bool setColoredRectangleInstanceRedSecondValue = false;
-                int ColoredRectangleInstanceRedFirstValue= 0;
-                int ColoredRectangleInstanceRedSecondValue= 0;
-                bool setColoredRectangleInstanceWidthFirstValue = false;
-                bool setColoredRectangleInstanceWidthSecondValue = false;
-                float ColoredRectangleInstanceWidthFirstValue= 0;
-                float ColoredRectangleInstanceWidthSecondValue= 0;
-                bool setGreenFirstValue = false;
-                bool setGreenSecondValue = false;
-                int GreenFirstValue= 0;
-                int GreenSecondValue= 0;
+                bool setBackgroundRectangleBlueFirstValue = false;
+                bool setBackgroundRectangleBlueSecondValue = false;
+                int BackgroundRectangleBlueFirstValue= 0;
+                int BackgroundRectangleBlueSecondValue= 0;
+                bool setBackgroundRectangleGreenFirstValue = false;
+                bool setBackgroundRectangleGreenSecondValue = false;
+                int BackgroundRectangleGreenFirstValue= 0;
+                int BackgroundRectangleGreenSecondValue= 0;
+                bool setBackgroundRectangleHeightFirstValue = false;
+                bool setBackgroundRectangleHeightSecondValue = false;
+                float BackgroundRectangleHeightFirstValue= 0;
+                float BackgroundRectangleHeightSecondValue= 0;
+                bool setBackgroundRectangleRedFirstValue = false;
+                bool setBackgroundRectangleRedSecondValue = false;
+                int BackgroundRectangleRedFirstValue= 0;
+                int BackgroundRectangleRedSecondValue= 0;
+                bool setBackgroundRectangleWidthFirstValue = false;
+                bool setBackgroundRectangleWidthSecondValue = false;
+                float BackgroundRectangleWidthFirstValue= 0;
+                float BackgroundRectangleWidthSecondValue= 0;
                 bool setHeightFirstValue = false;
                 bool setHeightSecondValue = false;
                 float HeightFirstValue= 0;
                 float HeightSecondValue= 0;
-                bool setRedFirstValue = false;
-                bool setRedSecondValue = false;
-                int RedFirstValue= 0;
-                int RedSecondValue= 0;
                 bool setTextInstanceFontSizeFirstValue = false;
                 bool setTextInstanceFontSizeSecondValue = false;
                 int TextInstanceFontSizeFirstValue= 0;
@@ -118,57 +96,49 @@
                 bool setTextInstanceHeightSecondValue = false;
                 float TextInstanceHeightFirstValue= 0;
                 float TextInstanceHeightSecondValue= 0;
-                bool setTextInstanceWidthFirstValue = false;
-                bool setTextInstanceWidthSecondValue = false;
-                float TextInstanceWidthFirstValue= 0;
-                float TextInstanceWidthSecondValue= 0;
                 bool setWidthFirstValue = false;
                 bool setWidthSecondValue = false;
                 float WidthFirstValue= 0;
                 float WidthSecondValue= 0;
-                bool setXFirstValue = false;
-                bool setXSecondValue = false;
-                float XFirstValue= 0;
-                float XSecondValue= 0;
-                bool setYFirstValue = false;
-                bool setYSecondValue = false;
-                float YFirstValue= 0;
-                float YSecondValue= 0;
                 switch(firstState)
                 {
                     case  VariableState.Default:
-                        setAlphaFirstValue = true;
-                        AlphaFirstValue = 255;
-                        setBlueFirstValue = true;
-                        BlueFirstValue = 255;
-                        setColoredRectangleInstanceBlueFirstValue = true;
-                        ColoredRectangleInstanceBlueFirstValue = 150;
-                        setColoredRectangleInstanceGreenFirstValue = true;
-                        ColoredRectangleInstanceGreenFirstValue = 150;
-                        setColoredRectangleInstanceHeightFirstValue = true;
-                        ColoredRectangleInstanceHeightFirstValue = 100f;
+                        setBackgroundRectangleBlueFirstValue = true;
+                        BackgroundRectangleBlueFirstValue = 128;
+                        setBackgroundRectangleGreenFirstValue = true;
+                        BackgroundRectangleGreenFirstValue = 128;
+                        setBackgroundRectangleHeightFirstValue = true;
+                        BackgroundRectangleHeightFirstValue = 100f;
                         if (interpolationValue < 1)
                         {
-                            this.ColoredRectangleInstance.HeightUnits = Gum.DataTypes.DimensionUnitType.Percentage;
+                            this.BackgroundRectangle.HeightUnits = Gum.DataTypes.DimensionUnitType.Percentage;
                         }
-                        setColoredRectangleInstanceRedFirstValue = true;
-                        ColoredRectangleInstanceRedFirstValue = 150;
-                        setColoredRectangleInstanceWidthFirstValue = true;
-                        ColoredRectangleInstanceWidthFirstValue = 100f;
+                        setBackgroundRectangleRedFirstValue = true;
+                        BackgroundRectangleRedFirstValue = 128;
+                        setBackgroundRectangleWidthFirstValue = true;
+                        BackgroundRectangleWidthFirstValue = 100f;
                         if (interpolationValue < 1)
                         {
-                            this.ColoredRectangleInstance.WidthUnits = Gum.DataTypes.DimensionUnitType.Percentage;
+                            this.BackgroundRectangle.WidthUnits = Gum.DataTypes.DimensionUnitType.Percentage;
                         }
-                        setGreenFirstValue = true;
-                        GreenFirstValue = 255;
+                        if (interpolationValue < 1)
+                        {
+                            this.BackgroundRectangle.XOrigin = RenderingLibrary.Graphics.HorizontalAlignment.Left;
+                        }
+                        if (interpolationValue < 1)
+                        {
+                            this.BackgroundRectangle.XUnits = Gum.Converters.GeneralUnitType.PixelsFromSmall;
+                        }
+                        if (interpolationValue < 1)
+                        {
+                            this.BackgroundRectangle.YOrigin = RenderingLibrary.Graphics.VerticalAlignment.Top;
+                        }
+                        if (interpolationValue < 1)
+                        {
+                            this.BackgroundRectangle.YUnits = Gum.Converters.GeneralUnitType.PixelsFromSmall;
+                        }
                         setHeightFirstValue = true;
-                        HeightFirstValue = 102f;
-                        if (interpolationValue < 1)
-                        {
-                            this.HeightUnits = Gum.DataTypes.DimensionUnitType.Absolute;
-                        }
-                        setRedFirstValue = true;
-                        RedFirstValue = 255;
+                        HeightFirstValue = 75f;
                         if (interpolationValue < 1)
                         {
                             this.TextInstance.Font = "Vivaldi";
@@ -187,85 +157,75 @@
                         }
                         if (interpolationValue < 1)
                         {
-                            this.TextInstance.Text = "Button";
-                        }
-                        if (interpolationValue < 1)
-                        {
                             this.TextInstance.VerticalAlignment = RenderingLibrary.Graphics.VerticalAlignment.Center;
                         }
-                        setTextInstanceWidthFirstValue = true;
-                        TextInstanceWidthFirstValue = 100f;
                         if (interpolationValue < 1)
                         {
                             this.TextInstance.WidthUnits = Gum.DataTypes.DimensionUnitType.Percentage;
                         }
                         if (interpolationValue < 1)
                         {
-                            this.Visible = true;
+                            this.TextInstance.XOrigin = RenderingLibrary.Graphics.HorizontalAlignment.Left;
+                        }
+                        if (interpolationValue < 1)
+                        {
+                            this.TextInstance.XUnits = Gum.Converters.GeneralUnitType.PixelsFromSmall;
+                        }
+                        if (interpolationValue < 1)
+                        {
+                            this.TextInstance.YOrigin = RenderingLibrary.Graphics.VerticalAlignment.Top;
+                        }
+                        if (interpolationValue < 1)
+                        {
+                            this.TextInstance.YUnits = Gum.Converters.GeneralUnitType.PixelsFromSmall;
                         }
                         setWidthFirstValue = true;
-                        WidthFirstValue = 204f;
+                        WidthFirstValue = 25f;
                         if (interpolationValue < 1)
                         {
-                            this.WidthUnits = Gum.DataTypes.DimensionUnitType.Absolute;
-                        }
-                        setXFirstValue = true;
-                        XFirstValue = 0f;
-                        if (interpolationValue < 1)
-                        {
-                            this.XOrigin = RenderingLibrary.Graphics.HorizontalAlignment.Left;
-                        }
-                        if (interpolationValue < 1)
-                        {
-                            this.XUnits = Gum.Converters.GeneralUnitType.PixelsFromSmall;
-                        }
-                        setYFirstValue = true;
-                        YFirstValue = 0f;
-                        if (interpolationValue < 1)
-                        {
-                            this.YOrigin = RenderingLibrary.Graphics.VerticalAlignment.Top;
-                        }
-                        if (interpolationValue < 1)
-                        {
-                            this.YUnits = Gum.Converters.GeneralUnitType.PixelsFromSmall;
+                            this.WidthUnits = Gum.DataTypes.DimensionUnitType.Percentage;
                         }
                         break;
                 }
                 switch(secondState)
                 {
                     case  VariableState.Default:
-                        setAlphaSecondValue = true;
-                        AlphaSecondValue = 255;
-                        setBlueSecondValue = true;
-                        BlueSecondValue = 255;
-                        setColoredRectangleInstanceBlueSecondValue = true;
-                        ColoredRectangleInstanceBlueSecondValue = 150;
-                        setColoredRectangleInstanceGreenSecondValue = true;
-                        ColoredRectangleInstanceGreenSecondValue = 150;
-                        setColoredRectangleInstanceHeightSecondValue = true;
-                        ColoredRectangleInstanceHeightSecondValue = 100f;
+                        setBackgroundRectangleBlueSecondValue = true;
+                        BackgroundRectangleBlueSecondValue = 128;
+                        setBackgroundRectangleGreenSecondValue = true;
+                        BackgroundRectangleGreenSecondValue = 128;
+                        setBackgroundRectangleHeightSecondValue = true;
+                        BackgroundRectangleHeightSecondValue = 100f;
                         if (interpolationValue >= 1)
                         {
-                            this.ColoredRectangleInstance.HeightUnits = Gum.DataTypes.DimensionUnitType.Percentage;
+                            this.BackgroundRectangle.HeightUnits = Gum.DataTypes.DimensionUnitType.Percentage;
                         }
-                        setColoredRectangleInstanceRedSecondValue = true;
-                        ColoredRectangleInstanceRedSecondValue = 150;
-                        setColoredRectangleInstanceWidthSecondValue = true;
-                        ColoredRectangleInstanceWidthSecondValue = 100f;
+                        setBackgroundRectangleRedSecondValue = true;
+                        BackgroundRectangleRedSecondValue = 128;
+                        setBackgroundRectangleWidthSecondValue = true;
+                        BackgroundRectangleWidthSecondValue = 100f;
                         if (interpolationValue >= 1)
                         {
-                            this.ColoredRectangleInstance.WidthUnits = Gum.DataTypes.DimensionUnitType.Percentage;
+                            this.BackgroundRectangle.WidthUnits = Gum.DataTypes.DimensionUnitType.Percentage;
                         }
-                        setGreenSecondValue = true;
-                        GreenSecondValue = 255;
+                        if (interpolationValue >= 1)
+                        {
+                            this.BackgroundRectangle.XOrigin = RenderingLibrary.Graphics.HorizontalAlignment.Left;
+                        }
+                        if (interpolationValue >= 1)
+                        {
+                            this.BackgroundRectangle.XUnits = Gum.Converters.GeneralUnitType.PixelsFromSmall;
+                        }
+                        if (interpolationValue >= 1)
+                        {
+                            this.BackgroundRectangle.YOrigin = RenderingLibrary.Graphics.VerticalAlignment.Top;
+                        }
+                        if (interpolationValue >= 1)
+                        {
+                            this.BackgroundRectangle.YUnits = Gum.Converters.GeneralUnitType.PixelsFromSmall;
+                        }
                         setHeightSecondValue = true;
-                        HeightSecondValue = 102f;
-                        if (interpolationValue >= 1)
-                        {
-                            this.HeightUnits = Gum.DataTypes.DimensionUnitType.Absolute;
-                        }
-                        setRedSecondValue = true;
-                        RedSecondValue = 255;
+                        HeightSecondValue = 75f;
                         if (interpolationValue >= 1)
                         {
                             this.TextInstance.Font = "Vivaldi";
@@ -284,89 +244,59 @@
                         }
                         if (interpolationValue >= 1)
                         {
-                            this.TextInstance.Text = "Button";
-                        }
-                        if (interpolationValue >= 1)
-                        {
                             this.TextInstance.VerticalAlignment = RenderingLibrary.Graphics.VerticalAlignment.Center;
                         }
-                        setTextInstanceWidthSecondValue = true;
-                        TextInstanceWidthSecondValue = 100f;
                         if (interpolationValue >= 1)
                         {
                             this.TextInstance.WidthUnits = Gum.DataTypes.DimensionUnitType.Percentage;
                         }
                         if (interpolationValue >= 1)
                         {
-                            this.Visible = true;
+                            this.TextInstance.XOrigin = RenderingLibrary.Graphics.HorizontalAlignment.Left;
+                        }
+                        if (interpolationValue >= 1)
+                        {
+                            this.TextInstance.XUnits = Gum.Converters.GeneralUnitType.PixelsFromSmall;
+                        }
+                        if (interpolationValue >= 1)
+                        {
+                            this.TextInstance.YOrigin = RenderingLibrary.Graphics.VerticalAlignment.Top;
+                        }
+                        if (interpolationValue >= 1)
+                        {
+                            this.TextInstance.YUnits = Gum.Converters.GeneralUnitType.PixelsFromSmall;
                         }
                         setWidthSecondValue = true;
-                        WidthSecondValue = 204f;
+                        WidthSecondValue = 25f;
                         if (interpolationValue >= 1)
                         {
-                            this.WidthUnits = Gum.DataTypes.DimensionUnitType.Absolute;
-                        }
-                        setXSecondValue = true;
-                        XSecondValue = 0f;
-                        if (interpolationValue >= 1)
-                        {
-                            this.XOrigin = RenderingLibrary.Graphics.HorizontalAlignment.Left;
-                        }
-                        if (interpolationValue >= 1)
-                        {
-                            this.XUnits = Gum.Converters.GeneralUnitType.PixelsFromSmall;
-                        }
-                        setYSecondValue = true;
-                        YSecondValue = 0f;
-                        if (interpolationValue >= 1)
-                        {
-                            this.YOrigin = RenderingLibrary.Graphics.VerticalAlignment.Top;
-                        }
-                        if (interpolationValue >= 1)
-                        {
-                            this.YUnits = Gum.Converters.GeneralUnitType.PixelsFromSmall;
+                            this.WidthUnits = Gum.DataTypes.DimensionUnitType.Percentage;
                         }
                         break;
                 }
-                if (setAlphaFirstValue && setAlphaSecondValue)
+                if (setBackgroundRectangleBlueFirstValue && setBackgroundRectangleBlueSecondValue)
                 {
-                    Alpha = FlatRedBall.Math.MathFunctions.RoundToInt(AlphaFirstValue* (1 - interpolationValue) + AlphaSecondValue * interpolationValue);
+                    BackgroundRectangle.Blue = FlatRedBall.Math.MathFunctions.RoundToInt(BackgroundRectangleBlueFirstValue* (1 - interpolationValue) + BackgroundRectangleBlueSecondValue * interpolationValue);
                 }
-                if (setBlueFirstValue && setBlueSecondValue)
+                if (setBackgroundRectangleGreenFirstValue && setBackgroundRectangleGreenSecondValue)
                 {
-                    Blue = FlatRedBall.Math.MathFunctions.RoundToInt(BlueFirstValue* (1 - interpolationValue) + BlueSecondValue * interpolationValue);
+                    BackgroundRectangle.Green = FlatRedBall.Math.MathFunctions.RoundToInt(BackgroundRectangleGreenFirstValue* (1 - interpolationValue) + BackgroundRectangleGreenSecondValue * interpolationValue);
                 }
-                if (setColoredRectangleInstanceBlueFirstValue && setColoredRectangleInstanceBlueSecondValue)
+                if (setBackgroundRectangleHeightFirstValue && setBackgroundRectangleHeightSecondValue)
                 {
-                    ColoredRectangleInstance.Blue = FlatRedBall.Math.MathFunctions.RoundToInt(ColoredRectangleInstanceBlueFirstValue* (1 - interpolationValue) + ColoredRectangleInstanceBlueSecondValue * interpolationValue);
+                    BackgroundRectangle.Height = BackgroundRectangleHeightFirstValue * (1 - interpolationValue) + BackgroundRectangleHeightSecondValue * interpolationValue;
                 }
-                if (setColoredRectangleInstanceGreenFirstValue && setColoredRectangleInstanceGreenSecondValue)
+                if (setBackgroundRectangleRedFirstValue && setBackgroundRectangleRedSecondValue)
                 {
-                    ColoredRectangleInstance.Green = FlatRedBall.Math.MathFunctions.RoundToInt(ColoredRectangleInstanceGreenFirstValue* (1 - interpolationValue) + ColoredRectangleInstanceGreenSecondValue * interpolationValue);
+                    BackgroundRectangle.Red = FlatRedBall.Math.MathFunctions.RoundToInt(BackgroundRectangleRedFirstValue* (1 - interpolationValue) + BackgroundRectangleRedSecondValue * interpolationValue);
                 }
-                if (setColoredRectangleInstanceHeightFirstValue && setColoredRectangleInstanceHeightSecondValue)
+                if (setBackgroundRectangleWidthFirstValue && setBackgroundRectangleWidthSecondValue)
                 {
-                    ColoredRectangleInstance.Height = ColoredRectangleInstanceHeightFirstValue * (1 - interpolationValue) + ColoredRectangleInstanceHeightSecondValue * interpolationValue;
-                }
-                if (setColoredRectangleInstanceRedFirstValue && setColoredRectangleInstanceRedSecondValue)
-                {
-                    ColoredRectangleInstance.Red = FlatRedBall.Math.MathFunctions.RoundToInt(ColoredRectangleInstanceRedFirstValue* (1 - interpolationValue) + ColoredRectangleInstanceRedSecondValue * interpolationValue);
-                }
-                if (setColoredRectangleInstanceWidthFirstValue && setColoredRectangleInstanceWidthSecondValue)
-                {
-                    ColoredRectangleInstance.Width = ColoredRectangleInstanceWidthFirstValue * (1 - interpolationValue) + ColoredRectangleInstanceWidthSecondValue * interpolationValue;
-                }
-                if (setGreenFirstValue && setGreenSecondValue)
-                {
-                    Green = FlatRedBall.Math.MathFunctions.RoundToInt(GreenFirstValue* (1 - interpolationValue) + GreenSecondValue * interpolationValue);
+                    BackgroundRectangle.Width = BackgroundRectangleWidthFirstValue * (1 - interpolationValue) + BackgroundRectangleWidthSecondValue * interpolationValue;
                 }
                 if (setHeightFirstValue && setHeightSecondValue)
                 {
                     Height = HeightFirstValue * (1 - interpolationValue) + HeightSecondValue * interpolationValue;
-                }
-                if (setRedFirstValue && setRedSecondValue)
-                {
-                    Red = FlatRedBall.Math.MathFunctions.RoundToInt(RedFirstValue* (1 - interpolationValue) + RedSecondValue * interpolationValue);
                 }
                 if (setTextInstanceFontSizeFirstValue && setTextInstanceFontSizeSecondValue)
                 {
@@ -376,21 +306,9 @@
                 {
                     TextInstance.Height = TextInstanceHeightFirstValue * (1 - interpolationValue) + TextInstanceHeightSecondValue * interpolationValue;
                 }
-                if (setTextInstanceWidthFirstValue && setTextInstanceWidthSecondValue)
-                {
-                    TextInstance.Width = TextInstanceWidthFirstValue * (1 - interpolationValue) + TextInstanceWidthSecondValue * interpolationValue;
-                }
                 if (setWidthFirstValue && setWidthSecondValue)
                 {
                     Width = WidthFirstValue * (1 - interpolationValue) + WidthSecondValue * interpolationValue;
-                }
-                if (setXFirstValue && setXSecondValue)
-                {
-                    X = XFirstValue * (1 - interpolationValue) + XSecondValue * interpolationValue;
-                }
-                if (setYFirstValue && setYSecondValue)
-                {
-                    Y = YFirstValue * (1 - interpolationValue) + YSecondValue * interpolationValue;
                 }
                 if (interpolationValue < 1)
                 {
@@ -474,57 +392,9 @@
                         newState.Variables.Add(new Gum.DataTypes.Variables.VariableSave()
                         {
                             SetsValue = true,
-                            Name = "Alpha",
-                            Type = "int",
-                            Value = Alpha
-                        }
-                        );
-                        newState.Variables.Add(new Gum.DataTypes.Variables.VariableSave()
-                        {
-                            SetsValue = true,
-                            Name = "Blue",
-                            Type = "int",
-                            Value = Blue
-                        }
-                        );
-                        newState.Variables.Add(new Gum.DataTypes.Variables.VariableSave()
-                        {
-                            SetsValue = true,
-                            Name = "Green",
-                            Type = "int",
-                            Value = Green
-                        }
-                        );
-                        newState.Variables.Add(new Gum.DataTypes.Variables.VariableSave()
-                        {
-                            SetsValue = true,
                             Name = "Height",
                             Type = "float",
                             Value = Height
-                        }
-                        );
-                        newState.Variables.Add(new Gum.DataTypes.Variables.VariableSave()
-                        {
-                            SetsValue = true,
-                            Name = "Height Units",
-                            Type = "DimensionUnitType",
-                            Value = HeightUnits
-                        }
-                        );
-                        newState.Variables.Add(new Gum.DataTypes.Variables.VariableSave()
-                        {
-                            SetsValue = true,
-                            Name = "Red",
-                            Type = "int",
-                            Value = Red
-                        }
-                        );
-                        newState.Variables.Add(new Gum.DataTypes.Variables.VariableSave()
-                        {
-                            SetsValue = true,
-                            Name = "Visible",
-                            Type = "bool",
-                            Value = Visible
                         }
                         );
                         newState.Variables.Add(new Gum.DataTypes.Variables.VariableSave()
@@ -546,105 +416,89 @@
                         newState.Variables.Add(new Gum.DataTypes.Variables.VariableSave()
                         {
                             SetsValue = true,
-                            Name = "X",
-                            Type = "float",
-                            Value = X
+                            Name = "BackgroundRectangle.Blue",
+                            Type = "int",
+                            Value = BackgroundRectangle.Blue
                         }
                         );
                         newState.Variables.Add(new Gum.DataTypes.Variables.VariableSave()
                         {
                             SetsValue = true,
-                            Name = "X Origin",
+                            Name = "BackgroundRectangle.Green",
+                            Type = "int",
+                            Value = BackgroundRectangle.Green
+                        }
+                        );
+                        newState.Variables.Add(new Gum.DataTypes.Variables.VariableSave()
+                        {
+                            SetsValue = true,
+                            Name = "BackgroundRectangle.Height",
+                            Type = "float",
+                            Value = BackgroundRectangle.Height
+                        }
+                        );
+                        newState.Variables.Add(new Gum.DataTypes.Variables.VariableSave()
+                        {
+                            SetsValue = true,
+                            Name = "BackgroundRectangle.Height Units",
+                            Type = "DimensionUnitType",
+                            Value = BackgroundRectangle.HeightUnits
+                        }
+                        );
+                        newState.Variables.Add(new Gum.DataTypes.Variables.VariableSave()
+                        {
+                            SetsValue = true,
+                            Name = "BackgroundRectangle.Red",
+                            Type = "int",
+                            Value = BackgroundRectangle.Red
+                        }
+                        );
+                        newState.Variables.Add(new Gum.DataTypes.Variables.VariableSave()
+                        {
+                            SetsValue = true,
+                            Name = "BackgroundRectangle.Width",
+                            Type = "float",
+                            Value = BackgroundRectangle.Width
+                        }
+                        );
+                        newState.Variables.Add(new Gum.DataTypes.Variables.VariableSave()
+                        {
+                            SetsValue = true,
+                            Name = "BackgroundRectangle.Width Units",
+                            Type = "DimensionUnitType",
+                            Value = BackgroundRectangle.WidthUnits
+                        }
+                        );
+                        newState.Variables.Add(new Gum.DataTypes.Variables.VariableSave()
+                        {
+                            SetsValue = true,
+                            Name = "BackgroundRectangle.X Origin",
                             Type = "HorizontalAlignment",
-                            Value = XOrigin
+                            Value = BackgroundRectangle.XOrigin
                         }
                         );
                         newState.Variables.Add(new Gum.DataTypes.Variables.VariableSave()
                         {
                             SetsValue = true,
-                            Name = "X Units",
+                            Name = "BackgroundRectangle.X Units",
                             Type = "PositionUnitType",
-                            Value = XUnits
+                            Value = BackgroundRectangle.XUnits
                         }
                         );
                         newState.Variables.Add(new Gum.DataTypes.Variables.VariableSave()
                         {
                             SetsValue = true,
-                            Name = "Y",
-                            Type = "float",
-                            Value = Y
-                        }
-                        );
-                        newState.Variables.Add(new Gum.DataTypes.Variables.VariableSave()
-                        {
-                            SetsValue = true,
-                            Name = "Y Origin",
+                            Name = "BackgroundRectangle.Y Origin",
                             Type = "VerticalAlignment",
-                            Value = YOrigin
+                            Value = BackgroundRectangle.YOrigin
                         }
                         );
                         newState.Variables.Add(new Gum.DataTypes.Variables.VariableSave()
                         {
                             SetsValue = true,
-                            Name = "Y Units",
+                            Name = "BackgroundRectangle.Y Units",
                             Type = "PositionUnitType",
-                            Value = YUnits
-                        }
-                        );
-                        newState.Variables.Add(new Gum.DataTypes.Variables.VariableSave()
-                        {
-                            SetsValue = true,
-                            Name = "ColoredRectangleInstance.Blue",
-                            Type = "int",
-                            Value = ColoredRectangleInstance.Blue
-                        }
-                        );
-                        newState.Variables.Add(new Gum.DataTypes.Variables.VariableSave()
-                        {
-                            SetsValue = true,
-                            Name = "ColoredRectangleInstance.Green",
-                            Type = "int",
-                            Value = ColoredRectangleInstance.Green
-                        }
-                        );
-                        newState.Variables.Add(new Gum.DataTypes.Variables.VariableSave()
-                        {
-                            SetsValue = true,
-                            Name = "ColoredRectangleInstance.Height",
-                            Type = "float",
-                            Value = ColoredRectangleInstance.Height
-                        }
-                        );
-                        newState.Variables.Add(new Gum.DataTypes.Variables.VariableSave()
-                        {
-                            SetsValue = true,
-                            Name = "ColoredRectangleInstance.Height Units",
-                            Type = "DimensionUnitType",
-                            Value = ColoredRectangleInstance.HeightUnits
-                        }
-                        );
-                        newState.Variables.Add(new Gum.DataTypes.Variables.VariableSave()
-                        {
-                            SetsValue = true,
-                            Name = "ColoredRectangleInstance.Red",
-                            Type = "int",
-                            Value = ColoredRectangleInstance.Red
-                        }
-                        );
-                        newState.Variables.Add(new Gum.DataTypes.Variables.VariableSave()
-                        {
-                            SetsValue = true,
-                            Name = "ColoredRectangleInstance.Width",
-                            Type = "float",
-                            Value = ColoredRectangleInstance.Width
-                        }
-                        );
-                        newState.Variables.Add(new Gum.DataTypes.Variables.VariableSave()
-                        {
-                            SetsValue = true,
-                            Name = "ColoredRectangleInstance.Width Units",
-                            Type = "DimensionUnitType",
-                            Value = ColoredRectangleInstance.WidthUnits
+                            Value = BackgroundRectangle.YUnits
                         }
                         );
                         newState.Variables.Add(new Gum.DataTypes.Variables.VariableSave()
@@ -690,14 +544,6 @@
                         newState.Variables.Add(new Gum.DataTypes.Variables.VariableSave()
                         {
                             SetsValue = true,
-                            Name = "TextInstance.Text",
-                            Type = "string",
-                            Value = TextInstance.Text
-                        }
-                        );
-                        newState.Variables.Add(new Gum.DataTypes.Variables.VariableSave()
-                        {
-                            SetsValue = true,
                             Name = "TextInstance.VerticalAlignment",
                             Type = "VerticalAlignment",
                             Value = TextInstance.VerticalAlignment
@@ -706,17 +552,41 @@
                         newState.Variables.Add(new Gum.DataTypes.Variables.VariableSave()
                         {
                             SetsValue = true,
-                            Name = "TextInstance.Width",
-                            Type = "float",
-                            Value = TextInstance.Width
+                            Name = "TextInstance.Width Units",
+                            Type = "DimensionUnitType",
+                            Value = TextInstance.WidthUnits
                         }
                         );
                         newState.Variables.Add(new Gum.DataTypes.Variables.VariableSave()
                         {
                             SetsValue = true,
-                            Name = "TextInstance.Width Units",
-                            Type = "DimensionUnitType",
-                            Value = TextInstance.WidthUnits
+                            Name = "TextInstance.X Origin",
+                            Type = "HorizontalAlignment",
+                            Value = TextInstance.XOrigin
+                        }
+                        );
+                        newState.Variables.Add(new Gum.DataTypes.Variables.VariableSave()
+                        {
+                            SetsValue = true,
+                            Name = "TextInstance.X Units",
+                            Type = "PositionUnitType",
+                            Value = TextInstance.XUnits
+                        }
+                        );
+                        newState.Variables.Add(new Gum.DataTypes.Variables.VariableSave()
+                        {
+                            SetsValue = true,
+                            Name = "TextInstance.Y Origin",
+                            Type = "VerticalAlignment",
+                            Value = TextInstance.YOrigin
+                        }
+                        );
+                        newState.Variables.Add(new Gum.DataTypes.Variables.VariableSave()
+                        {
+                            SetsValue = true,
+                            Name = "TextInstance.Y Units",
+                            Type = "PositionUnitType",
+                            Value = TextInstance.YUnits
                         }
                         );
                         break;
@@ -732,57 +602,9 @@
                         newState.Variables.Add(new Gum.DataTypes.Variables.VariableSave()
                         {
                             SetsValue = true,
-                            Name = "Alpha",
-                            Type = "int",
-                            Value = Alpha + 255
-                        }
-                        );
-                        newState.Variables.Add(new Gum.DataTypes.Variables.VariableSave()
-                        {
-                            SetsValue = true,
-                            Name = "Blue",
-                            Type = "int",
-                            Value = Blue + 255
-                        }
-                        );
-                        newState.Variables.Add(new Gum.DataTypes.Variables.VariableSave()
-                        {
-                            SetsValue = true,
-                            Name = "Green",
-                            Type = "int",
-                            Value = Green + 255
-                        }
-                        );
-                        newState.Variables.Add(new Gum.DataTypes.Variables.VariableSave()
-                        {
-                            SetsValue = true,
                             Name = "Height",
                             Type = "float",
-                            Value = Height + 102f
-                        }
-                        );
-                        newState.Variables.Add(new Gum.DataTypes.Variables.VariableSave()
-                        {
-                            SetsValue = true,
-                            Name = "Height Units",
-                            Type = "DimensionUnitType",
-                            Value = HeightUnits
-                        }
-                        );
-                        newState.Variables.Add(new Gum.DataTypes.Variables.VariableSave()
-                        {
-                            SetsValue = true,
-                            Name = "Red",
-                            Type = "int",
-                            Value = Red + 255
-                        }
-                        );
-                        newState.Variables.Add(new Gum.DataTypes.Variables.VariableSave()
-                        {
-                            SetsValue = true,
-                            Name = "Visible",
-                            Type = "bool",
-                            Value = Visible
+                            Value = Height + 75f
                         }
                         );
                         newState.Variables.Add(new Gum.DataTypes.Variables.VariableSave()
@@ -790,7 +612,7 @@
                             SetsValue = true,
                             Name = "Width",
                             Type = "float",
-                            Value = Width + 204f
+                            Value = Width + 25f
                         }
                         );
                         newState.Variables.Add(new Gum.DataTypes.Variables.VariableSave()
@@ -804,105 +626,89 @@
                         newState.Variables.Add(new Gum.DataTypes.Variables.VariableSave()
                         {
                             SetsValue = true,
-                            Name = "X",
-                            Type = "float",
-                            Value = X + 0f
+                            Name = "BackgroundRectangle.Blue",
+                            Type = "int",
+                            Value = BackgroundRectangle.Blue + 128
                         }
                         );
                         newState.Variables.Add(new Gum.DataTypes.Variables.VariableSave()
                         {
                             SetsValue = true,
-                            Name = "X Origin",
+                            Name = "BackgroundRectangle.Green",
+                            Type = "int",
+                            Value = BackgroundRectangle.Green + 128
+                        }
+                        );
+                        newState.Variables.Add(new Gum.DataTypes.Variables.VariableSave()
+                        {
+                            SetsValue = true,
+                            Name = "BackgroundRectangle.Height",
+                            Type = "float",
+                            Value = BackgroundRectangle.Height + 100f
+                        }
+                        );
+                        newState.Variables.Add(new Gum.DataTypes.Variables.VariableSave()
+                        {
+                            SetsValue = true,
+                            Name = "BackgroundRectangle.Height Units",
+                            Type = "DimensionUnitType",
+                            Value = BackgroundRectangle.HeightUnits
+                        }
+                        );
+                        newState.Variables.Add(new Gum.DataTypes.Variables.VariableSave()
+                        {
+                            SetsValue = true,
+                            Name = "BackgroundRectangle.Red",
+                            Type = "int",
+                            Value = BackgroundRectangle.Red + 128
+                        }
+                        );
+                        newState.Variables.Add(new Gum.DataTypes.Variables.VariableSave()
+                        {
+                            SetsValue = true,
+                            Name = "BackgroundRectangle.Width",
+                            Type = "float",
+                            Value = BackgroundRectangle.Width + 100f
+                        }
+                        );
+                        newState.Variables.Add(new Gum.DataTypes.Variables.VariableSave()
+                        {
+                            SetsValue = true,
+                            Name = "BackgroundRectangle.Width Units",
+                            Type = "DimensionUnitType",
+                            Value = BackgroundRectangle.WidthUnits
+                        }
+                        );
+                        newState.Variables.Add(new Gum.DataTypes.Variables.VariableSave()
+                        {
+                            SetsValue = true,
+                            Name = "BackgroundRectangle.X Origin",
                             Type = "HorizontalAlignment",
-                            Value = XOrigin
+                            Value = BackgroundRectangle.XOrigin
                         }
                         );
                         newState.Variables.Add(new Gum.DataTypes.Variables.VariableSave()
                         {
                             SetsValue = true,
-                            Name = "X Units",
+                            Name = "BackgroundRectangle.X Units",
                             Type = "PositionUnitType",
-                            Value = XUnits
+                            Value = BackgroundRectangle.XUnits
                         }
                         );
                         newState.Variables.Add(new Gum.DataTypes.Variables.VariableSave()
                         {
                             SetsValue = true,
-                            Name = "Y",
-                            Type = "float",
-                            Value = Y + 0f
-                        }
-                        );
-                        newState.Variables.Add(new Gum.DataTypes.Variables.VariableSave()
-                        {
-                            SetsValue = true,
-                            Name = "Y Origin",
+                            Name = "BackgroundRectangle.Y Origin",
                             Type = "VerticalAlignment",
-                            Value = YOrigin
+                            Value = BackgroundRectangle.YOrigin
                         }
                         );
                         newState.Variables.Add(new Gum.DataTypes.Variables.VariableSave()
                         {
                             SetsValue = true,
-                            Name = "Y Units",
+                            Name = "BackgroundRectangle.Y Units",
                             Type = "PositionUnitType",
-                            Value = YUnits
-                        }
-                        );
-                        newState.Variables.Add(new Gum.DataTypes.Variables.VariableSave()
-                        {
-                            SetsValue = true,
-                            Name = "ColoredRectangleInstance.Blue",
-                            Type = "int",
-                            Value = ColoredRectangleInstance.Blue + 150
-                        }
-                        );
-                        newState.Variables.Add(new Gum.DataTypes.Variables.VariableSave()
-                        {
-                            SetsValue = true,
-                            Name = "ColoredRectangleInstance.Green",
-                            Type = "int",
-                            Value = ColoredRectangleInstance.Green + 150
-                        }
-                        );
-                        newState.Variables.Add(new Gum.DataTypes.Variables.VariableSave()
-                        {
-                            SetsValue = true,
-                            Name = "ColoredRectangleInstance.Height",
-                            Type = "float",
-                            Value = ColoredRectangleInstance.Height + 100f
-                        }
-                        );
-                        newState.Variables.Add(new Gum.DataTypes.Variables.VariableSave()
-                        {
-                            SetsValue = true,
-                            Name = "ColoredRectangleInstance.Height Units",
-                            Type = "DimensionUnitType",
-                            Value = ColoredRectangleInstance.HeightUnits
-                        }
-                        );
-                        newState.Variables.Add(new Gum.DataTypes.Variables.VariableSave()
-                        {
-                            SetsValue = true,
-                            Name = "ColoredRectangleInstance.Red",
-                            Type = "int",
-                            Value = ColoredRectangleInstance.Red + 150
-                        }
-                        );
-                        newState.Variables.Add(new Gum.DataTypes.Variables.VariableSave()
-                        {
-                            SetsValue = true,
-                            Name = "ColoredRectangleInstance.Width",
-                            Type = "float",
-                            Value = ColoredRectangleInstance.Width + 100f
-                        }
-                        );
-                        newState.Variables.Add(new Gum.DataTypes.Variables.VariableSave()
-                        {
-                            SetsValue = true,
-                            Name = "ColoredRectangleInstance.Width Units",
-                            Type = "DimensionUnitType",
-                            Value = ColoredRectangleInstance.WidthUnits
+                            Value = BackgroundRectangle.YUnits
                         }
                         );
                         newState.Variables.Add(new Gum.DataTypes.Variables.VariableSave()
@@ -948,14 +754,6 @@
                         newState.Variables.Add(new Gum.DataTypes.Variables.VariableSave()
                         {
                             SetsValue = true,
-                            Name = "TextInstance.Text",
-                            Type = "string",
-                            Value = TextInstance.Text
-                        }
-                        );
-                        newState.Variables.Add(new Gum.DataTypes.Variables.VariableSave()
-                        {
-                            SetsValue = true,
                             Name = "TextInstance.VerticalAlignment",
                             Type = "VerticalAlignment",
                             Value = TextInstance.VerticalAlignment
@@ -964,17 +762,41 @@
                         newState.Variables.Add(new Gum.DataTypes.Variables.VariableSave()
                         {
                             SetsValue = true,
-                            Name = "TextInstance.Width",
-                            Type = "float",
-                            Value = TextInstance.Width + 100f
+                            Name = "TextInstance.Width Units",
+                            Type = "DimensionUnitType",
+                            Value = TextInstance.WidthUnits
                         }
                         );
                         newState.Variables.Add(new Gum.DataTypes.Variables.VariableSave()
                         {
                             SetsValue = true,
-                            Name = "TextInstance.Width Units",
-                            Type = "DimensionUnitType",
-                            Value = TextInstance.WidthUnits
+                            Name = "TextInstance.X Origin",
+                            Type = "HorizontalAlignment",
+                            Value = TextInstance.XOrigin
+                        }
+                        );
+                        newState.Variables.Add(new Gum.DataTypes.Variables.VariableSave()
+                        {
+                            SetsValue = true,
+                            Name = "TextInstance.X Units",
+                            Type = "PositionUnitType",
+                            Value = TextInstance.XUnits
+                        }
+                        );
+                        newState.Variables.Add(new Gum.DataTypes.Variables.VariableSave()
+                        {
+                            SetsValue = true,
+                            Name = "TextInstance.Y Origin",
+                            Type = "VerticalAlignment",
+                            Value = TextInstance.YOrigin
+                        }
+                        );
+                        newState.Variables.Add(new Gum.DataTypes.Variables.VariableSave()
+                        {
+                            SetsValue = true,
+                            Name = "TextInstance.Y Units",
+                            Type = "PositionUnitType",
+                            Value = TextInstance.YUnits
                         }
                         );
                         break;
@@ -995,7 +817,7 @@
                 }
                 base.ApplyState(state);
             }
-            private Pirates.GumRuntimes.ColoredRectangleRuntime ColoredRectangleInstance { get; set; }
+            private Pirates.GumRuntimes.ColoredRectangleRuntime BackgroundRectangle { get; set; }
             private Pirates.GumRuntimes.TextRuntime TextInstance { get; set; }
             public string ButtonText
             {
@@ -1016,8 +838,6 @@
             public ButtonRuntime (bool fullInstantiation = true, bool tryCreateFormsObject = true) 
             	: base(false, tryCreateFormsObject)
             {
-                this.HasEvents = true;
-                this.ExposeChildrenEvents = true;
                 if (fullInstantiation)
                 {
                     Gum.DataTypes.ElementSave elementSave = Gum.Managers.ObjectFinder.Self.GumProjectSave.Components.First(item => item.Name == "Button");
@@ -1041,7 +861,7 @@
             }
             private void AssignReferences () 
             {
-                ColoredRectangleInstance = this.GetGraphicalUiElementByName("ColoredRectangleInstance") as Pirates.GumRuntimes.ColoredRectangleRuntime;
+                BackgroundRectangle = this.GetGraphicalUiElementByName("BackgroundRectangle") as Pirates.GumRuntimes.ColoredRectangleRuntime;
                 TextInstance = this.GetGraphicalUiElementByName("TextInstance") as Pirates.GumRuntimes.TextRuntime;
             }
             public override void AddToManagers (RenderingLibrary.SystemManagers managers, RenderingLibrary.Graphics.Layer layer) 

@@ -248,18 +248,6 @@ namespace Pirates.Entities
             AnchorSpriteInstance.Texture = AnchorSprite;
             AnchorSpriteInstance.TextureScale = 0.5f;
             AnchorSpriteInstance.Visible = false;
-            if (Parent == null)
-            {
-                Z = 15f;
-            }
-            else if (Parent is FlatRedBall.Camera)
-            {
-                RelativeZ = 15f - 40.0f;
-            }
-            else
-            {
-                RelativeZ = 15f;
-            }
             SpeedScale = 0;
             SideToShootFrom = -1;
         }

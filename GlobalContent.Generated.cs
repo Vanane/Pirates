@@ -20,6 +20,9 @@ namespace Pirates
     {
         
         public static FlatRedBall.Gum.GumIdb GumProject { get; set; }
+        public static Microsoft.Xna.Framework.Graphics.Texture2D pistol { get; set; }
+        public static Microsoft.Xna.Framework.Graphics.Texture2D shotgun { get; set; }
+        public static FlatRedBall.Graphics.Animation.AnimationChainList SkeletonAnimation { get; set; }
         [System.Obsolete("Use GetFile instead")]
         public static object GetStaticMember (string memberName) 
         {
@@ -27,6 +30,12 @@ namespace Pirates
             {
                 case  "GumProject":
                     return GumProject;
+                case  "pistol":
+                    return pistol;
+                case  "shotgun":
+                    return shotgun;
+                case  "SkeletonAnimation":
+                    return SkeletonAnimation;
             }
             return null;
         }
@@ -36,6 +45,12 @@ namespace Pirates
             {
                 case  "GumProject":
                     return GumProject;
+                case  "pistol":
+                    return pistol;
+                case  "shotgun":
+                    return shotgun;
+                case  "SkeletonAnimation":
+                    return SkeletonAnimation;
             }
             return null;
         }
@@ -46,6 +61,9 @@ namespace Pirates
         {
             
             FlatRedBall.Gum.GumIdb.StaticInitialize("content/gumproject/gumproject.gumx"); FlatRedBall.Gum.GumIdbExtensions.RegisterTypes();  FlatRedBall.Gui.GuiManager.BringsClickedWindowsToFront = false;FlatRedBall.Gum.GumIdb.FixedCanvasAspectRatio = null;FlatRedBall.FlatRedBallServices.GraphicsOptions.SizeOrOrientationChanged += (not, used) => { FlatRedBall.Gum.GumIdb.UpdateDisplayToMainFrbCamera(); };Gum.Wireframe.GraphicalUiElement.ShowLineRectangles = false;
+            pistol = FlatRedBall.FlatRedBallServices.Load<Microsoft.Xna.Framework.Graphics.Texture2D>(@"content/sprites/weapons/pistol.png", ContentManagerName);
+            shotgun = FlatRedBall.FlatRedBallServices.Load<Microsoft.Xna.Framework.Graphics.Texture2D>(@"content/sprites/weapons/shotgun.png", ContentManagerName);
+            SkeletonAnimation = FlatRedBall.FlatRedBallServices.Load<FlatRedBall.Graphics.Animation.AnimationChainList>(@"content/sprites/mobs/skeletonanimation.achx", ContentManagerName);
             			IsInitialized = true;
             #if DEBUG && WINDOWS
             InitializeFileWatch();
@@ -55,6 +73,14 @@ namespace Pirates
         }
         public static void Reload (object whatToReload) 
         {
+            if (whatToReload == SkeletonAnimation)
+            {
+                {
+                    var cm = FlatRedBall.FlatRedBallServices.GetContentManagerByName("Global");
+                    cm.UnloadAsset(SkeletonAnimation);
+                    SkeletonAnimation = FlatRedBall.FlatRedBallServices.Load<FlatRedBall.Graphics.Animation.AnimationChainList>("content/sprites/mobs/skeletonanimation.achx");
+                }
+            }
         }
         #if DEBUG && WINDOWS
         static System.IO.FileSystemWatcher watcher;
@@ -81,6 +107,18 @@ namespace Pirates
                 if (relativeFileName == "content/gumproject/gumproject.gumx")
                 {
                     Reload(GumProject);
+                }
+                if (relativeFileName == "content/sprites/weapons/pistol.png")
+                {
+                    Reload(pistol);
+                }
+                if (relativeFileName == "content/sprites/weapons/shotgun.png")
+                {
+                    Reload(shotgun);
+                }
+                if (relativeFileName == "content/sprites/mobs/skeletonanimation.achx")
+                {
+                    Reload(SkeletonAnimation);
                 }
             }
             catch{}
